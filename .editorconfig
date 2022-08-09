@@ -100,7 +100,7 @@ charset = utf-8-bom
 #
 # .props files
 #
-[*.{props,targets}]
+[*.{props,targets,tasks}]
 # BOM is supported.
 charset = utf-8-bom
 

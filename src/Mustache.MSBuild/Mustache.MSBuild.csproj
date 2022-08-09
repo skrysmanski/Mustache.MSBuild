@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="$(ProjectCommonsDirectory)Project.Code.props" />
+  <Import Project="$(ProjectCommonsDirectory)Project.NuGetPackage.props" />
+
+  <PropertyGroup>
+    <!-- Important: Must be .NET Standard 2.0 so that the tasks can run both in Visual Studio and dotnet build.
+           See also: https://docs.microsoft.com/en-us/visualstudio/msbuild/tutorial-custom-task-code-generation?view=vs-2022#create-the-appsettingstronglytyped-project
+    -->
+    <TargetFramework>netstandard2.0</TargetFramework>
+
+    <LangVersion>latest</LangVersion>
+
+    <!-- See also: https://docs.microsoft.com/en-us/nuget/create-packages/prerelease-packages -->
+    <Version>0.1.0-preview4</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Label="NuGet package properties">
+    <Description>Renders Mustache templates when compiling projects. Uses JSON as data files.</Description>
+
+    <!-- See: https://spdx.org/licenses/ -->
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+    <RepositoryUrl>https://github.com/skrysmanski/Mustache.MSBuild</RepositoryUrl>
+
+    <!-- Mark this NuGet package as "dev dependency" so that users of this package don't create assemblies
+         that depend on this package. Is just for the build process.
+    -->
+    <DevelopmentDependency>true</DevelopmentDependency>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- IMPORTANT: Must be "Content" to be included in the NuGet package.
+         IMPORTANT 2: The folder "build" (inside a NuGet package) is special. Any .target or .props file in
+            this folder is automatically imported in each project (file) that references the NuGet package.
+            See: https://docs.microsoft.com/en-us/nuget/concepts/msbuild-props-and-targets
+         IMPORTANT 3: The "PackagePath" must be specified explicitely; without it the file would end up
+            in the wrong folder (contentFiles\any\netstandard2.0\build\).
+    -->
+    <Content Include="build\*.*" PackagePath="build\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Stubble.Core" Version="1.9.3" />
+    <PackageReference Include="Stubble.Extensions.JsonNet" Version="1.2.3" />
+  </ItemGroup>
+
+</Project>

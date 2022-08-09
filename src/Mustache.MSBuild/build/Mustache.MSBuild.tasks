@@ -1,0 +1,12 @@
+﻿<Project>
+
+  <!--
+    NOTE: If this task is used inside of Visual Studio's build process, VS will never(!) reload
+        the assembly - even if the NuGet package is updated with a new task assembly (probably
+        because it can't unload the currently loaded assembly). You have to close Visual Studio
+        and reopen it again to get the new version loaded.
+  -->
+  <UsingTask TaskName="Mustache.MSBuild.RenderMustacheTemplates"
+             AssemblyFile="$(MSBuildThisFileDirectory)..\lib\netstandard2.0\Mustache.MSBuild.dll" />
+
+</Project>
