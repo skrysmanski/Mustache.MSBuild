@@ -1,0 +1,51 @@
+#
+# This file list paths that are ignored by git.
+#
+# Tutorial: https://www.atlassian.com/git/tutorials/saving-changes/gitignore
+#
+# GitIgnore files for various project types: https://github.com/github/gitignore
+#
+
+
+#
+# Common ignores
+#
+
+# Log files
+*.log
+# Temporary files
+*.tmp
+# User files
+# See: https://en.wikipedia.org/wiki/.DS_Store
+.DS_Store
+
+
+#
+# Visual Studio ignores
+#
+
+# Visual Studio user and temporary files
+.vs/
+*.user
+*.suo
+
+# Build output directories
+**/bin/Debug/
+**/bin/Release/
+# Build intermediate directories
+**/obj/
+
+# ReSharper cache
+_ReSharper.Caches/
+
+# Launch settings for projects
+launchSettings.json
+
+# Generated NuGet packages
+*.nupkg
+build-packages/
+
+
+#
+# Repository custom ignores
+#

@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32414.318
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solution Items", "{D449EFC6-4D96-4FF2-B01F-A4748B50D9C3}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_ProjectCommons", "_ProjectCommons", "{BA1E9B9F-AD3B-41A4-B9AC-490A101FD762}"
+	ProjectSection(SolutionItems) = preProject
+		_ProjectCommons\CA.globalconfig = _ProjectCommons\CA.globalconfig
+		_ProjectCommons\Common.Directory.Build.props = _ProjectCommons\Common.Directory.Build.props
+		_ProjectCommons\Common.Directory.Build.targets = _ProjectCommons\Common.Directory.Build.targets
+		_ProjectCommons\Project.Code.props = _ProjectCommons\Project.Code.props
+		_ProjectCommons\Project.Code_Packages.props = _ProjectCommons\Project.Code_Packages.props
+		_ProjectCommons\Project.NuGetPackage.props = _ProjectCommons\Project.NuGetPackage.props
+		_ProjectCommons\Project.NuGetPackage_Post.props = _ProjectCommons\Project.NuGetPackage_Post.props
+		_ProjectCommons\Project.Sample.props = _ProjectCommons\Project.Sample.props
+		_ProjectCommons\Project.Shared.props = _ProjectCommons\Project.Shared.props
+		_ProjectCommons\Project.Shared_Packages.props = _ProjectCommons\Project.Shared_Packages.props
+		_ProjectCommons\Project.Tests.props = _ProjectCommons\Project.Tests.props
+		_ProjectCommons\Project.Tests_Packages.props = _ProjectCommons\Project.Tests_Packages.props
+		_ProjectCommons\Project.Tool.props = _ProjectCommons\Project.Tool.props
+		_ProjectCommons\StyleGuide.globalconfig = _ProjectCommons\StyleGuide.globalconfig
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{32140DA4-CE8A-43BC-B6BF-256C90495E1E}"
+	ProjectSection(SolutionItems) = preProject
+		src\.editorconfig = src\.editorconfig
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{80C6C1F6-CB66-493B-B8E1-276D4CCFB170}"
+EndProject
+Global
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BA1E9B9F-AD3B-41A4-B9AC-490A101FD762} = {D449EFC6-4D96-4FF2-B01F-A4748B50D9C3}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FF64C9CC-C599-47C6-892D-FB620795361C}
+	EndGlobalSection
+EndGlobal

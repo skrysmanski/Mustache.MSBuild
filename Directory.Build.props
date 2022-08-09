@@ -1,0 +1,13 @@
+﻿<!--
+
+  This .props file is automatically imported by MSBuild/Visual Studio.
+
+  For more details, see: https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build#directorybuildprops-and-directorybuildtargets
+
+-->
+<!-- You can find the latest version of this file here: https://github.com/skrysmanski/base-dotnet -->
+<Project>
+
+  <Import Project="$(MSBuildThisFileDirectory)_ProjectCommons/Common.Directory.Build.props" />
+
+</Project>
