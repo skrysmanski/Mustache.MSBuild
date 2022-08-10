@@ -49,3 +49,4 @@ build-packages/
 #
 # Repository custom ignores
 #
+src/Mustache.MSBuild/FodyWeavers.xsd

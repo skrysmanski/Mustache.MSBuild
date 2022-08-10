@@ -13,6 +13,9 @@
 
     <!-- See also: https://docs.microsoft.com/en-us/nuget/create-packages/prerelease-packages -->
     <Version>0.1.0-preview5</Version>
+
+    <!-- Copy NuGet dependencies to output directory so that Costura.Fody can embed them. -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet package properties">
@@ -41,6 +44,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Costura.Fody" Version="5.7.0">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.2.0" />
     <PackageReference Include="Stubble.Core" Version="1.9.3" />
