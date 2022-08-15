@@ -9,7 +9,7 @@ using Task = Microsoft.Build.Utilities.Task;
 namespace Mustache.MSBuild;
 
 /// <summary>
-/// A MSBuild task that renders Mustache templates.
+/// A MSBuild task that renders Mustache templates. For the actual rendering, see <see cref="MustacheTemplateRenderer"/>.
 /// </summary>
 [UsedImplicitly]
 public sealed class RenderMustacheTemplates : Task
