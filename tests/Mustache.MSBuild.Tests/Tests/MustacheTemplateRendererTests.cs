@@ -14,14 +14,15 @@ public sealed class MustacheTemplateRendererTests
     {
         // Setup
         var templateDescriptor = new TemplateDescriptor(
-            "<b>{{MyTemplateValue}}</b>",
-            "{ \"MyTemplateValue\": 123 }"
+            mustacheTemplate: "<b>{{MyTemplateValue}}</b> - <c>{{TemplateFile}}</c>",
+            templateDataJson: "{ \"MyTemplateValue\": 123 }",
+            mustacheTemplateFileName: "MyFile.cs.mustache"
         );
 
         // Test
         var renderedTemplate = MustacheTemplateRenderer.RenderTemplate(templateDescriptor);
 
         // Verify
-        renderedTemplate.ShouldBe("<b>123</b>");
+        renderedTemplate.ShouldBe("<b>123</b> - <c>MyFile.cs.mustache</c>");
     }
 }

@@ -3,6 +3,7 @@
 using Mustache.MSBuild.DataTypes;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 using Stubble.Core.Builders;
 using Stubble.Core.Interfaces;
@@ -25,7 +26,10 @@ internal static class MustacheTemplateRenderer
     [MustUseReturnValue]
     public static string RenderTemplate(TemplateDescriptor templateDescriptor)
     {
-        var templateData = JsonConvert.DeserializeObject(templateDescriptor.TemplateDataJson);
+        var templateData = (JObject)JsonConvert.DeserializeObject(templateDescriptor.TemplateDataJson);
+
+        // Adds variables that are always available.
+        templateData.Add("TemplateFile", new JValue(templateDescriptor.MustacheTemplateFileName));
 
         return s_renderer.Render(templateDescriptor.MustacheTemplate, templateData);
     }

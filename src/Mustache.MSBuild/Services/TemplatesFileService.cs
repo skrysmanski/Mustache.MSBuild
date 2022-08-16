@@ -17,7 +17,8 @@ internal static class TemplatesFileService
 
         return new TemplateDescriptor(
             mustacheTemplate: template,
-            templateDataJson: templateDataFileContents
+            templateDataJson: templateDataFileContents,
+            mustacheTemplateFileName: Path.GetFileName(templatePathDescriptor.PathToMustacheFile)
         );
     }
 
