@@ -37,7 +37,7 @@ public sealed class RenderMustacheTemplates : Task
 
             foreach (var templatePath in this.TemplatePaths)
             {
-                var templateDescriptor = TemplateDescriptor.ForTemplateFile(pathToMustacheFile: templatePath.ItemSpec);
+                var templateDescriptor = TemplatePathDescriptor.ForTemplateFile(pathToMustacheFile: templatePath.ItemSpec);
 
                 if (!File.Exists(templateDescriptor.PathToMustacheFile))
                 {

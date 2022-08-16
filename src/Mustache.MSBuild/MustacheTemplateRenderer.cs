@@ -20,18 +20,18 @@ internal static class MustacheTemplateRenderer
     /// <summary>
     /// Renders the template from the descriptor to its output file.
     /// </summary>
-    public static void RenderTemplateToOutputFile(TemplateDescriptor templateDescriptor, bool onlyWriteFileIfContentsHaveChanged = true)
+    public static void RenderTemplateToOutputFile(TemplatePathDescriptor templatePathDescriptor, bool onlyWriteFileIfContentsHaveChanged = true)
     {
-        var template = File.ReadAllText(templateDescriptor.PathToMustacheFile);
+        var template = File.ReadAllText(templatePathDescriptor.PathToMustacheFile);
 
-        var templateDataFileContents = File.ReadAllText(templateDescriptor.PathToDataFile, Encoding.UTF8);
+        var templateDataFileContents = File.ReadAllText(templatePathDescriptor.PathToDataFile, Encoding.UTF8);
         var templateData = JsonConvert.DeserializeObject(templateDataFileContents);
 
         var newOutputFileContents = s_renderer.Render(template, templateData);
 
-        if (onlyWriteFileIfContentsHaveChanged && File.Exists(templateDescriptor.PathToOutputFile))
+        if (onlyWriteFileIfContentsHaveChanged && File.Exists(templatePathDescriptor.PathToOutputFile))
         {
-            var currentOutputFileContents = File.ReadAllText(templateDescriptor.PathToOutputFile, Encoding.UTF8);
+            var currentOutputFileContents = File.ReadAllText(templatePathDescriptor.PathToOutputFile, Encoding.UTF8);
             if (newOutputFileContents == currentOutputFileContents)
             {
                 // File is up-to-date. Don't write.
@@ -42,6 +42,6 @@ internal static class MustacheTemplateRenderer
             }
         }
 
-        File.WriteAllText(templateDescriptor.PathToOutputFile, newOutputFileContents, Encoding.UTF8);
+        File.WriteAllText(templatePathDescriptor.PathToOutputFile, newOutputFileContents, Encoding.UTF8);
     }
 }
