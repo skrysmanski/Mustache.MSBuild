@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using Microsoft.Build.Framework;
 
 using Mustache.MSBuild.DataTypes;
+using Mustache.MSBuild.Services;
 
 using Task = Microsoft.Build.Utilities.Task;
 

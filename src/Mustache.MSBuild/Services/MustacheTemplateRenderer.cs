@@ -8,7 +8,7 @@ using Stubble.Core.Builders;
 using Stubble.Core.Interfaces;
 using Stubble.Extensions.JsonNet;
 
-namespace Mustache.MSBuild;
+namespace Mustache.MSBuild.Services;
 
 /// <summary>
 /// Renders Mustache templates.
