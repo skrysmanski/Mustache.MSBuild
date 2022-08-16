@@ -5,7 +5,7 @@ using Shouldly;
 
 using Xunit;
 
-namespace Mustache.MSBuild.Tests;
+namespace Mustache.MSBuild.Tests.Services;
 
 public sealed class MustacheTemplateRendererTests
 {
