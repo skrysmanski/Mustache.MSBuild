@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="$(ProjectCommonsDirectory)Project.Tests.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+
+    <RootNamespace>Mustache.MSBuild</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- NOTE: We just include this to get rid of the warning concerning different versions of Newtonsoft.Json. -->
+    <PackageReference Include="Stubble.Extensions.JsonNet" Version="1.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Mustache.MSBuild\Mustache.MSBuild.csproj" />
+  </ItemGroup>
+
+</Project>
