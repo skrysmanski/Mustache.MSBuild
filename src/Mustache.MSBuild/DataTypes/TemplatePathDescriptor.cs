@@ -1,11 +1,11 @@
 ﻿using JetBrains.Annotations;
 
-namespace Mustache.MSBuild;
+namespace Mustache.MSBuild.DataTypes;
 
 /// <summary>
-/// Contains the information about a template.
+/// Contains the information about the (file) paths for a template.
 /// </summary>
-internal sealed class TemplateDescriptor
+internal sealed class TemplatePathDescriptor
 {
     public string PathToMustacheFile { get; }
 
@@ -13,7 +13,7 @@ internal sealed class TemplateDescriptor
 
     public string PathToDataFile { get; }
 
-    private TemplateDescriptor(string pathToMustacheFile, string pathToOutputFile, string pathToDataFile)
+    private TemplatePathDescriptor(string pathToMustacheFile, string pathToOutputFile, string pathToDataFile)
     {
         this.PathToMustacheFile = pathToMustacheFile;
         this.PathToOutputFile = pathToOutputFile;
@@ -25,13 +25,13 @@ internal sealed class TemplateDescriptor
     /// of the template file.
     /// </summary>
     [MustUseReturnValue]
-    public static TemplateDescriptor ForTemplateFile(string pathToMustacheFile)
+    public static TemplatePathDescriptor ForTemplateFile(string pathToMustacheFile)
     {
         // NOTE: GetFileNameWithoutExtension() only removes the last(!) extension. So for "template.cs.mustache" we get "template.cs".
         var outputFileName = Path.GetFileNameWithoutExtension(pathToMustacheFile);
         var pathToOutputFile = Path.Combine(Path.GetDirectoryName(pathToMustacheFile)!, outputFileName);
 
-        return new TemplateDescriptor(
+        return new TemplatePathDescriptor(
             pathToMustacheFile: pathToMustacheFile,
             pathToOutputFile: pathToOutputFile,
             pathToDataFile: pathToOutputFile + ".json"

@@ -4,6 +4,9 @@ using JetBrains.Annotations;
 
 using Microsoft.Build.Framework;
 
+using Mustache.MSBuild.DataTypes;
+using Mustache.MSBuild.Services;
+
 using Task = Microsoft.Build.Utilities.Task;
 
 namespace Mustache.MSBuild;
@@ -37,25 +40,29 @@ public sealed class RenderMustacheTemplates : Task
 
             foreach (var templatePath in this.TemplatePaths)
             {
-                var templateDescriptor = TemplateDescriptor.ForTemplateFile(pathToMustacheFile: templatePath.ItemSpec);
+                var templatePathDescriptor = TemplatePathDescriptor.ForTemplateFile(pathToMustacheFile: templatePath.ItemSpec);
 
-                if (!File.Exists(templateDescriptor.PathToMustacheFile))
+                if (!File.Exists(templatePathDescriptor.PathToMustacheFile))
                 {
-                    this.Log.LogWarning("The template file '{0}' doesn't exist. Ignoring it.", templateDescriptor.PathToMustacheFile);
+                    this.Log.LogWarning("The template file '{0}' doesn't exist. Ignoring it.", templatePathDescriptor.PathToMustacheFile);
                     continue;
                 }
 
-                if (!File.Exists(templateDescriptor.PathToDataFile))
+                if (!File.Exists(templatePathDescriptor.PathToDataFile))
                 {
                     this.Log.LogWarning(
                         "The data file '{0}' is missing for template file '{1}'. Ignoring it.",
-                        Path.GetFileName(templateDescriptor.PathToDataFile),
-                        templateDescriptor.PathToMustacheFile
+                        Path.GetFileName(templatePathDescriptor.PathToDataFile),
+                        templatePathDescriptor.PathToMustacheFile
                     );
                     continue;
                 }
 
-                MustacheTemplateRenderer.RenderTemplateToOutputFile(templateDescriptor, onlyWriteFileIfContentsHaveChanged: true);
+                var templateDescriptor = TemplatesFileService.LoadTemplate(templatePathDescriptor);
+
+                var renderedTemplate = MustacheTemplateRenderer.RenderTemplate(templateDescriptor);
+
+                TemplatesFileService.WriteRenderedTemplate(templatePathDescriptor, renderedTemplate);
             }
 
             return true;
