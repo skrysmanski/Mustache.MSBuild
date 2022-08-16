@@ -6,6 +6,7 @@ using Microsoft.Build.Framework;
 
 using Mustache.MSBuild.DataTypes;
 using Mustache.MSBuild.Services;
+using Mustache.MSBuild.Utils;
 
 using Task = Microsoft.Build.Utilities.Task;
 
@@ -19,6 +20,8 @@ public sealed class RenderMustacheTemplates : Task
 {
     // See also: https://docs.microsoft.com/en-us/visualstudio/msbuild/task-writing
     // See also: https://docs.microsoft.com/en-us/visualstudio/msbuild/tutorial-custom-task-code-generation
+
+    private static readonly TemplatesFileService s_templatesFileService = new(RealFileSystem.Instance);
 
     /// <summary>
     /// The paths to the template files to render.
@@ -40,7 +43,7 @@ public sealed class RenderMustacheTemplates : Task
 
             foreach (var templatePath in this.TemplatePaths)
             {
-                var templatePathDescriptor = TemplatePathDescriptor.ForTemplateFile(pathToMustacheFile: templatePath.ItemSpec);
+                var templatePathDescriptor = TemplatePathDescriptor.ForTemplateFile(pathToMustacheFile: templatePath.ItemSpec, RealFileSystem.Instance);
 
                 if (!File.Exists(templatePathDescriptor.PathToMustacheFile))
                 {
@@ -58,11 +61,11 @@ public sealed class RenderMustacheTemplates : Task
                     continue;
                 }
 
-                var templateDescriptor = TemplatesFileService.LoadTemplate(templatePathDescriptor);
+                var templateDescriptor = s_templatesFileService.LoadTemplate(templatePathDescriptor);
 
                 var renderedTemplate = MustacheTemplateRenderer.RenderTemplate(templateDescriptor);
 
-                TemplatesFileService.WriteRenderedTemplate(templatePathDescriptor, renderedTemplate);
+                s_templatesFileService.WriteRenderedTemplate(templatePathDescriptor, renderedTemplate);
             }
 
             return true;

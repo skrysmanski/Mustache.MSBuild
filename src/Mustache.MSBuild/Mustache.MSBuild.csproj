@@ -67,6 +67,10 @@
       <!-- Since this dependency is bundled in our assembly, we don't need/want to create a NuGet dependency for it. -->
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="System.IO.Abstractions" Version="17.1.1">
+      <!-- Since this dependency is bundled in our assembly, we don't need/want to create a NuGet dependency for it. -->
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>

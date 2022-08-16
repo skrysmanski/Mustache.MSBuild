@@ -1,4 +1,6 @@
-﻿using JetBrains.Annotations;
+﻿using System.IO.Abstractions;
+
+using JetBrains.Annotations;
 
 namespace Mustache.MSBuild.DataTypes;
 
@@ -25,11 +27,11 @@ internal sealed class TemplatePathDescriptor
     /// of the template file.
     /// </summary>
     [MustUseReturnValue]
-    public static TemplatePathDescriptor ForTemplateFile(string pathToMustacheFile)
+    public static TemplatePathDescriptor ForTemplateFile(string pathToMustacheFile, IFileSystem fileSystem)
     {
         // NOTE: GetFileNameWithoutExtension() only removes the last(!) extension. So for "template.cs.mustache" we get "template.cs".
-        var outputFileName = Path.GetFileNameWithoutExtension(pathToMustacheFile);
-        var pathToOutputFile = Path.Combine(Path.GetDirectoryName(pathToMustacheFile)!, outputFileName);
+        var outputFileName = fileSystem.Path.GetFileNameWithoutExtension(pathToMustacheFile);
+        var pathToOutputFile = fileSystem.Path.Combine(fileSystem.Path.GetDirectoryName(pathToMustacheFile)!, outputFileName);
 
         return new TemplatePathDescriptor(
             pathToMustacheFile: pathToMustacheFile,

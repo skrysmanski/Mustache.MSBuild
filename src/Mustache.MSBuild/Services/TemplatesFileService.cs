@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.IO.Abstractions;
+using System.Text;
 
 using JetBrains.Annotations;
 
@@ -6,27 +7,34 @@ using Mustache.MSBuild.DataTypes;
 
 namespace Mustache.MSBuild.Services;
 
-internal static class TemplatesFileService
+internal sealed class TemplatesFileService
 {
-    [MustUseReturnValue]
-    public static TemplateDescriptor LoadTemplate(TemplatePathDescriptor templatePathDescriptor)
-    {
-        var template = File.ReadAllText(templatePathDescriptor.PathToMustacheFile, Encoding.UTF8);
+    private readonly IFileSystem _fileSystem;
 
-        var templateDataFileContents = File.ReadAllText(templatePathDescriptor.PathToDataFile, Encoding.UTF8);
+    public TemplatesFileService(IFileSystem fileSystem)
+    {
+        this._fileSystem = fileSystem;
+    }
+
+    [MustUseReturnValue]
+    public TemplateDescriptor LoadTemplate(TemplatePathDescriptor templatePathDescriptor)
+    {
+        var template = this._fileSystem.File.ReadAllText(templatePathDescriptor.PathToMustacheFile, Encoding.UTF8);
+
+        var templateDataFileContents = this._fileSystem.File.ReadAllText(templatePathDescriptor.PathToDataFile, Encoding.UTF8);
 
         return new TemplateDescriptor(
             mustacheTemplate: template,
             templateDataJson: templateDataFileContents,
-            mustacheTemplateFileName: Path.GetFileName(templatePathDescriptor.PathToMustacheFile)
+            mustacheTemplateFileName: this._fileSystem.Path.GetFileName(templatePathDescriptor.PathToMustacheFile)
         );
     }
 
-    public static void WriteRenderedTemplate(TemplatePathDescriptor templatePathDescriptor, string renderedTemplate, bool onlyWriteFileIfContentsHaveChanged = true)
+    public void WriteRenderedTemplate(TemplatePathDescriptor templatePathDescriptor, string renderedTemplate, bool onlyWriteFileIfContentsHaveChanged = true)
     {
-        if (onlyWriteFileIfContentsHaveChanged && File.Exists(templatePathDescriptor.PathToOutputFile))
+        if (onlyWriteFileIfContentsHaveChanged && this._fileSystem.File.Exists(templatePathDescriptor.PathToOutputFile))
         {
-            var currentOutputFileContents = File.ReadAllText(templatePathDescriptor.PathToOutputFile, Encoding.UTF8);
+            var currentOutputFileContents = this._fileSystem.File.ReadAllText(templatePathDescriptor.PathToOutputFile, Encoding.UTF8);
 
             if (renderedTemplate == currentOutputFileContents)
             {
@@ -38,6 +46,6 @@ internal static class TemplatesFileService
             }
         }
 
-        File.WriteAllText(templatePathDescriptor.PathToOutputFile, renderedTemplate, Encoding.UTF8);
+        this._fileSystem.File.WriteAllText(templatePathDescriptor.PathToOutputFile, renderedTemplate, Encoding.UTF8);
     }
 }
