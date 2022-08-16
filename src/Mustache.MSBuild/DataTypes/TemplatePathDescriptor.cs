@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace Mustache.MSBuild;
+namespace Mustache.MSBuild.DataTypes;
 
 /// <summary>
 /// Contains the information about the (file) paths for a template.

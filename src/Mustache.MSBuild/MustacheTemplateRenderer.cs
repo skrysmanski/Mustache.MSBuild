@@ -1,5 +1,7 @@
 ﻿using System.Text;
 
+using Mustache.MSBuild.DataTypes;
+
 using Newtonsoft.Json;
 
 using Stubble.Core.Builders;
