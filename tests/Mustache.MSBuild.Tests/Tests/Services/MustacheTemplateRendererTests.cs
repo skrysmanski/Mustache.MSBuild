@@ -7,6 +7,9 @@ using Xunit;
 
 namespace Mustache.MSBuild.Tests.Services;
 
+/// <summary>
+/// Tests for <see cref="MustacheTemplateRenderer"/>.
+/// </summary>
 public sealed class MustacheTemplateRendererTests
 {
     [Fact]

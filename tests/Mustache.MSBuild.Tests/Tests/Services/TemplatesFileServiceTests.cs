@@ -10,6 +10,9 @@ using Xunit;
 
 namespace Mustache.MSBuild.Tests.Services;
 
+/// <summary>
+/// Tests for <see cref="TemplatesFileService"/>.
+/// </summary>
 public sealed class TemplatesFileServiceTests
 {
     [Fact]
