@@ -18,6 +18,10 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <!-- Not sure why, but we need to disable this or MSBuild won't be able to load this assembly. -->
     <EmbedJetbrainsAnnotations>false</EmbedJetbrainsAnnotations>
+    <!-- We disable merging dependencies into the assembly in Debug mode because to make code coverage easier
+         (try to run code coverage tests without this line and you'll see the difference in the code coverage report).
+    -->
+    <DisableFody Condition="'$(Configuration)' == 'Debug'">true</DisableFody>
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet package properties">
