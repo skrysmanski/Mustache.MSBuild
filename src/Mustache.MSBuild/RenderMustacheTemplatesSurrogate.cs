@@ -32,39 +32,49 @@ internal sealed class RenderMustacheTemplatesSurrogate
                 return true;
             }
 
+            bool success = true;
+
             foreach (var templatePath in templatePaths)
             {
-                var templatePathDescriptor = TemplatePathDescriptor.ForTemplateFile(pathToMustacheFile: templatePath.ItemSpec, this._fileSystem);
-
-                if (!this._fileSystem.File.Exists(templatePathDescriptor.PathToMustacheFile))
+                try
                 {
-                    logger.LogWarning("The template file '{0}' doesn't exist. Ignoring it.", templatePathDescriptor.PathToMustacheFile);
-                    continue;
-                }
+                    var templatePathDescriptor = TemplatePathDescriptor.ForTemplateFile(pathToMustacheFile: templatePath.ItemSpec, this._fileSystem);
 
-                if (!this._fileSystem.File.Exists(templatePathDescriptor.PathToDataFile))
-                {
-                    logger.LogWarning(
-                        "The data file '{0}' is missing for template file '{1}'. Ignoring it.",
-                        Path.GetFileName(templatePathDescriptor.PathToDataFile),
-                        templatePathDescriptor.PathToMustacheFile
+                    if (!this._fileSystem.File.Exists(templatePathDescriptor.PathToMustacheFile))
+                    {
+                        logger.LogWarning("The template file '{0}' doesn't exist. Ignoring it.", templatePathDescriptor.PathToMustacheFile);
+                        continue;
+                    }
+
+                    if (!this._fileSystem.File.Exists(templatePathDescriptor.PathToDataFile))
+                    {
+                        logger.LogWarning(
+                            "The data file '{0}' is missing for template file '{1}'. Ignoring it.",
+                            Path.GetFileName(templatePathDescriptor.PathToDataFile),
+                            templatePathDescriptor.PathToMustacheFile
+                        );
+                        continue;
+                    }
+
+                    var templateDescriptor = this._templatesFileService.LoadTemplate(templatePathDescriptor);
+
+                    var renderedTemplate = MustacheTemplateRenderer.RenderTemplate(templateDescriptor);
+
+                    this._templatesFileService.WriteRenderedTemplate(
+                        templatePathDescriptor,
+                        renderedTemplate,
+                        templateDescriptor.TemplateFileEncoding,
+                        onlyWriteFileIfContentsHaveChanged: true
                     );
-                    continue;
                 }
-
-                var templateDescriptor = this._templatesFileService.LoadTemplate(templatePathDescriptor);
-
-                var renderedTemplate = MustacheTemplateRenderer.RenderTemplate(templateDescriptor);
-
-                this._templatesFileService.WriteRenderedTemplate(
-                    templatePathDescriptor,
-                    renderedTemplate,
-                    templateDescriptor.TemplateFileEncoding,
-                    onlyWriteFileIfContentsHaveChanged: true
-                );
+                catch (Exception ex)
+                {
+                    logger.LogErrorFromException(ex);
+                    success = false;
+                }
             }
 
-            return true;
+            return success;
         }
         catch (Exception ex)
         {
