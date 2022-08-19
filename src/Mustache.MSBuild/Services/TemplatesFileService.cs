@@ -1,9 +1,12 @@
 ﻿using System.IO.Abstractions;
+using System.Runtime.Serialization;
 using System.Text;
 
 using JetBrains.Annotations;
 
 using Mustache.MSBuild.DataTypes;
+
+using Newtonsoft.Json;
 
 namespace Mustache.MSBuild.Services;
 
@@ -21,10 +24,11 @@ internal sealed class TemplatesFileService
     [MustUseReturnValue]
     public TemplateDescriptor LoadTemplate(TemplatePathDescriptor templatePathDescriptor)
     {
-        var templateFileEncoding = DetermineFileEncoding(templatePathDescriptor.PathToMustacheFile);
-        var template = this._fileSystem.File.ReadAllText(templatePathDescriptor.PathToMustacheFile, templateFileEncoding);
-
         var templateDataFileContents = this._fileSystem.File.ReadAllText(templatePathDescriptor.PathToDataFile, UTF8_ENCODING_WITHOUT_BOM);
+
+        var templateFileEncoding = DetermineFileEncoding(templatePathDescriptor.PathToMustacheFile, templateDataFileContents);
+
+        var template = this._fileSystem.File.ReadAllText(templatePathDescriptor.PathToMustacheFile, templateFileEncoding);
 
         return new TemplateDescriptor(
             mustacheTemplate: template,
@@ -35,11 +39,23 @@ internal sealed class TemplatesFileService
     }
 
     [MustUseReturnValue]
-    private Encoding DetermineFileEncoding(string path)
+    private Encoding DetermineFileEncoding(string path, string templateDataFileContents)
     {
+        Encoding defaultEncoding;
+
+        var encodingInfo = JsonConvert.DeserializeObject<EncodingInfo>(templateDataFileContents);
+        if (encodingInfo?.EncodingName != null && !string.IsNullOrWhiteSpace(encodingInfo.EncodingName))
+        {
+            defaultEncoding = Encoding.GetEncoding(encodingInfo.EncodingName);
+        }
+        else
+        {
+            defaultEncoding = UTF8_ENCODING_WITHOUT_BOM;
+        }
+
         using var fileStream = this._fileSystem.File.OpenRead(path);
 
-        using var streamReader = new StreamReader(fileStream, UTF8_ENCODING_WITHOUT_BOM, detectEncodingFromByteOrderMarks: true);
+        using var streamReader = new StreamReader(fileStream, defaultEncoding, detectEncodingFromByteOrderMarks: true);
 
         streamReader.Peek();
 
@@ -63,5 +79,12 @@ internal sealed class TemplatesFileService
         }
 
         this._fileSystem.File.WriteAllText(templatePathDescriptor.PathToOutputFile, renderedTemplate, encoding);
+    }
+
+    [DataContract]
+    private sealed class EncodingInfo
+    {
+        [DataMember(Name = "$Encoding")]
+        public string? EncodingName { get; set; }
     }
 }
