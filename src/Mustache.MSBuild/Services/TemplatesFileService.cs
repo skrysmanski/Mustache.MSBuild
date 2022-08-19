@@ -5,6 +5,7 @@ using System.Text;
 using JetBrains.Annotations;
 
 using Mustache.MSBuild.DataTypes;
+using Mustache.MSBuild.Utils;
 
 using Newtonsoft.Json;
 
@@ -46,7 +47,15 @@ internal sealed class TemplatesFileService
         var encodingInfo = JsonConvert.DeserializeObject<EncodingInfo>(templateDataFileContents);
         if (encodingInfo?.EncodingName != null && !string.IsNullOrWhiteSpace(encodingInfo.EncodingName))
         {
-            defaultEncoding = Encoding.GetEncoding(encodingInfo.EncodingName);
+            try
+            {
+                defaultEncoding = Encoding.GetEncoding(encodingInfo.EncodingName);
+            }
+            catch (ArgumentException ex) when (ex.ParamName == "name")
+            {
+                // This is the exception we get when the encoding is unknown.
+                throw new ErrorMessageException($"'{encodingInfo.EncodingName}' is not a supported encoding name.");
+            }
         }
         else
         {

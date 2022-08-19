@@ -15,8 +15,21 @@ internal sealed class MsBuildLogger : IMsBuildLogger
     }
 
     /// <inheritdoc />
-    public void LogWarning(string message, params object[] messageArgs) => this._loggingHelper.LogWarning(message, messageArgs);
+    public void LogWarning(string message, params object[] messageArgs)
+    {
+        this._loggingHelper.LogWarning(message, messageArgs);
+    }
 
     /// <inheritdoc />
-    public void LogErrorFromException(Exception exception) => this._loggingHelper.LogErrorFromException(exception, showStackTrace: true);
+    public void LogErrorFromException(Exception exception)
+    {
+        if (exception is ErrorMessageException)
+        {
+            this._loggingHelper.LogError(exception.Message);
+        }
+        else
+        {
+            this._loggingHelper.LogErrorFromException(exception, showStackTrace: true);
+        }
+    }
 }
