@@ -56,7 +56,12 @@ internal sealed class RenderMustacheTemplatesSurrogate
 
                 var renderedTemplate = MustacheTemplateRenderer.RenderTemplate(templateDescriptor);
 
-                this._templatesFileService.WriteRenderedTemplate(templatePathDescriptor, renderedTemplate);
+                this._templatesFileService.WriteRenderedTemplate(
+                    templatePathDescriptor,
+                    renderedTemplate,
+                    templateDescriptor.TemplateFileEncoding,
+                    onlyWriteFileIfContentsHaveChanged: true
+                );
             }
 
             return true;

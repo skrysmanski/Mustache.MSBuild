@@ -1,4 +1,6 @@
-﻿namespace Mustache.MSBuild.DataTypes;
+﻿using System.Text;
+
+namespace Mustache.MSBuild.DataTypes;
 
 /// <summary>
 /// Describe the parts of a template.
@@ -20,10 +22,16 @@ internal sealed class TemplateDescriptor
     /// </summary>
     public string MustacheTemplateFileName { get; }
 
-    public TemplateDescriptor(string mustacheTemplate, string templateDataJson, string mustacheTemplateFileName)
+    /// <summary>
+    /// The encoding used by the template file and thus also for the output file.
+    /// </summary>
+    public Encoding TemplateFileEncoding { get; }
+
+    public TemplateDescriptor(string mustacheTemplate, string templateDataJson, string mustacheTemplateFileName, Encoding templateFileEncoding)
     {
         this.MustacheTemplate = mustacheTemplate;
         this.TemplateDataJson = templateDataJson;
         this.MustacheTemplateFileName = mustacheTemplateFileName;
+        this.TemplateFileEncoding = templateFileEncoding;
     }
 }

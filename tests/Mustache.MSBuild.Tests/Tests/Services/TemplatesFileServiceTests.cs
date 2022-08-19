@@ -15,8 +15,33 @@ namespace Mustache.MSBuild.Tests.Services;
 /// </summary>
 public sealed class TemplatesFileServiceTests
 {
-    [Fact]
-    public void Test_LoadTemplate()
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void Test_LoadTemplate_UTF8(bool withBom)
+    {
+        Test_LoadTemplate(withBom ? Encoding.UTF8 : new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void Test_LoadTemplate_UTF16(bool bigEndian)
+    {
+        var encoding = new UnicodeEncoding(bigEndian: bigEndian, byteOrderMark: true);
+        Test_LoadTemplate(encoding);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void Test_LoadTemplate_UTF32(bool bigEndian)
+    {
+        var encoding = new UTF32Encoding(bigEndian: bigEndian, byteOrderMark: true);
+        Test_LoadTemplate(encoding);
+    }
+
+    private static void Test_LoadTemplate(Encoding templateFileEncoding, Encoding? dataFileEncoding = null)
     {
         // Setup
         var fileSystem = new MockFileSystem();
@@ -24,8 +49,8 @@ public sealed class TemplatesFileServiceTests
         const string TEMPLATE_CONTENTS = "<c>{{MyProperty}}</c>";
         const string DATA_FILE_CONTENTS = "{ \"MyProperty\": 42 }";
 
-        fileSystem.AddFile("/templates/MyFile.txt.mustache", new MockFileData(TEMPLATE_CONTENTS));
-        fileSystem.AddFile("/templates/MyFile.txt.json", new MockFileData(DATA_FILE_CONTENTS));
+        fileSystem.AddFile("/templates/MyFile.txt.mustache", new MockFileData(TEMPLATE_CONTENTS, templateFileEncoding));
+        fileSystem.AddFile("/templates/MyFile.txt.json", new MockFileData(DATA_FILE_CONTENTS, dataFileEncoding ?? templateFileEncoding));
 
         var pathDescriptor = TemplatePathDescriptor.ForTemplateFile("/templates/MyFile.txt.mustache", fileSystem);
 
@@ -38,6 +63,7 @@ public sealed class TemplatesFileServiceTests
         templateDescriptor.MustacheTemplate.ShouldBe(TEMPLATE_CONTENTS);
         templateDescriptor.TemplateDataJson.ShouldBe(DATA_FILE_CONTENTS);
         templateDescriptor.MustacheTemplateFileName.ShouldBe("MyFile.txt.mustache");
+        templateDescriptor.TemplateFileEncoding.ShouldBe(templateFileEncoding);
     }
 
     [Theory]
@@ -52,8 +78,8 @@ public sealed class TemplatesFileServiceTests
         const string DATA_FILE_CONTENTS = "{ \"MyProperty\": 42 }";
         const string OUTPUT_CONTENT = "Some rendered content";
 
-        fileSystem.AddFile("/templates/MyFile.txt.mustache", new MockFileData(TEMPLATE_CONTENTS));
-        fileSystem.AddFile("/templates/MyFile.txt.json", new MockFileData(DATA_FILE_CONTENTS));
+        fileSystem.AddFile("/templates/MyFile.txt.mustache", new MockFileData(TEMPLATE_CONTENTS, Encoding.UTF8));
+        fileSystem.AddFile("/templates/MyFile.txt.json", new MockFileData(DATA_FILE_CONTENTS, Encoding.UTF8));
 
         var pathDescriptor = TemplatePathDescriptor.ForTemplateFile("/templates/MyFile.txt.mustache", fileSystem);
 
@@ -64,7 +90,12 @@ public sealed class TemplatesFileServiceTests
         var templatesFileService = new TemplatesFileService(fileSystem);
 
         // Test
-        templatesFileService.WriteRenderedTemplate(pathDescriptor, renderedTemplate: OUTPUT_CONTENT, onlyWriteFileIfContentsHaveChanged: onlyWriteFileIfContentsHaveChanged);
+        templatesFileService.WriteRenderedTemplate(
+            pathDescriptor,
+            renderedTemplate: OUTPUT_CONTENT,
+            Encoding.UTF8,
+            onlyWriteFileIfContentsHaveChanged: onlyWriteFileIfContentsHaveChanged
+        );
 
         // Verify
         fileSystem.File.Exists(pathDescriptor.PathToOutputFile).ShouldBe(true);
@@ -87,8 +118,8 @@ public sealed class TemplatesFileServiceTests
 
         var originalLastWriteTime = new DateTimeOffset(2000, 1, 1, 12, 0, 30, TimeSpan.Zero);
 
-        fileSystem.AddFile("/templates/MyFile.txt.mustache", new MockFileData(TEMPLATE_CONTENTS));
-        fileSystem.AddFile("/templates/MyFile.txt.json", new MockFileData(DATA_FILE_CONTENTS));
+        fileSystem.AddFile("/templates/MyFile.txt.mustache", new MockFileData(TEMPLATE_CONTENTS, Encoding.UTF8));
+        fileSystem.AddFile("/templates/MyFile.txt.json", new MockFileData(DATA_FILE_CONTENTS, Encoding.UTF8));
         fileSystem.AddFile(
             "/templates/MyFile.txt",
             new MockFileData(sameContent ? OUTPUT_CONTENT : OUTPUT_CONTENT + "XXX")
@@ -105,7 +136,12 @@ public sealed class TemplatesFileServiceTests
         var templatesFileService = new TemplatesFileService(fileSystem);
 
         // Test
-        templatesFileService.WriteRenderedTemplate(pathDescriptor, renderedTemplate: OUTPUT_CONTENT, onlyWriteFileIfContentsHaveChanged: onlyWriteFileIfContentsHaveChanged);
+        templatesFileService.WriteRenderedTemplate(
+            pathDescriptor,
+            renderedTemplate: OUTPUT_CONTENT,
+            Encoding.UTF8,
+            onlyWriteFileIfContentsHaveChanged: onlyWriteFileIfContentsHaveChanged
+        );
 
         // Verify
         fileSystem.File.Exists(pathDescriptor.PathToOutputFile).ShouldBe(true);

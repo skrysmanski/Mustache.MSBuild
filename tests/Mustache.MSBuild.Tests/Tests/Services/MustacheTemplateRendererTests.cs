@@ -1,4 +1,6 @@
-﻿using Mustache.MSBuild.DataTypes;
+﻿using System.Text;
+
+using Mustache.MSBuild.DataTypes;
 using Mustache.MSBuild.Services;
 
 using Shouldly;
@@ -19,7 +21,8 @@ public sealed class MustacheTemplateRendererTests
         var templateDescriptor = new TemplateDescriptor(
             mustacheTemplate: "<b>{{MyTemplateValue}}</b> - <c>{{TemplateFile}}</c>",
             templateDataJson: "{ \"MyTemplateValue\": 123 }",
-            mustacheTemplateFileName: "MyFile.cs.mustache"
+            mustacheTemplateFileName: "MyFile.cs.mustache",
+            templateFileEncoding: Encoding.UTF8
         );
 
         // Test

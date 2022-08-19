@@ -9,6 +9,8 @@ namespace Mustache.MSBuild.Services;
 
 internal sealed class TemplatesFileService
 {
+    private static readonly Encoding UTF8_ENCODING_WITHOUT_BOM = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+
     private readonly IFileSystem _fileSystem;
 
     public TemplatesFileService(IFileSystem fileSystem)
@@ -19,22 +21,36 @@ internal sealed class TemplatesFileService
     [MustUseReturnValue]
     public TemplateDescriptor LoadTemplate(TemplatePathDescriptor templatePathDescriptor)
     {
-        var template = this._fileSystem.File.ReadAllText(templatePathDescriptor.PathToMustacheFile, Encoding.UTF8);
+        var templateFileEncoding = DetermineFileEncoding(templatePathDescriptor.PathToMustacheFile);
+        var template = this._fileSystem.File.ReadAllText(templatePathDescriptor.PathToMustacheFile, templateFileEncoding);
 
-        var templateDataFileContents = this._fileSystem.File.ReadAllText(templatePathDescriptor.PathToDataFile, Encoding.UTF8);
+        var templateDataFileContents = this._fileSystem.File.ReadAllText(templatePathDescriptor.PathToDataFile, UTF8_ENCODING_WITHOUT_BOM);
 
         return new TemplateDescriptor(
             mustacheTemplate: template,
             templateDataJson: templateDataFileContents,
-            mustacheTemplateFileName: this._fileSystem.Path.GetFileName(templatePathDescriptor.PathToMustacheFile)
+            mustacheTemplateFileName: this._fileSystem.Path.GetFileName(templatePathDescriptor.PathToMustacheFile),
+            templateFileEncoding: templateFileEncoding
         );
     }
 
-    public void WriteRenderedTemplate(TemplatePathDescriptor templatePathDescriptor, string renderedTemplate, bool onlyWriteFileIfContentsHaveChanged = true)
+    [MustUseReturnValue]
+    private Encoding DetermineFileEncoding(string path)
+    {
+        using var fileStream = this._fileSystem.File.OpenRead(path);
+
+        using var streamReader = new StreamReader(fileStream, UTF8_ENCODING_WITHOUT_BOM, detectEncodingFromByteOrderMarks: true);
+
+        streamReader.Peek();
+
+        return streamReader.CurrentEncoding;
+    }
+
+    public void WriteRenderedTemplate(TemplatePathDescriptor templatePathDescriptor, string renderedTemplate, Encoding encoding, bool onlyWriteFileIfContentsHaveChanged = true)
     {
         if (onlyWriteFileIfContentsHaveChanged && this._fileSystem.File.Exists(templatePathDescriptor.PathToOutputFile))
         {
-            var currentOutputFileContents = this._fileSystem.File.ReadAllText(templatePathDescriptor.PathToOutputFile, Encoding.UTF8);
+            var currentOutputFileContents = this._fileSystem.File.ReadAllText(templatePathDescriptor.PathToOutputFile, encoding);
 
             if (renderedTemplate == currentOutputFileContents)
             {
@@ -46,6 +62,6 @@ internal sealed class TemplatesFileService
             }
         }
 
-        this._fileSystem.File.WriteAllText(templatePathDescriptor.PathToOutputFile, renderedTemplate, Encoding.UTF8);
+        this._fileSystem.File.WriteAllText(templatePathDescriptor.PathToOutputFile, renderedTemplate, encoding);
     }
 }
