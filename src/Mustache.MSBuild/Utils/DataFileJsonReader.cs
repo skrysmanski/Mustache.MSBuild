@@ -31,7 +31,7 @@ internal static class DataFileJsonReader
             }
             else
             {
-                throw new ErrorMessageException($"The content of data file '{dataFileName}' is not an object but a {deserializedData.GetType().Name}.");
+                throw new ErrorMessageException($"The content of data file '{dataFileName}' is not an object but a {deserializedData!.GetType().Name}.");
             }
         }
         catch (JsonSerializationException ex)
@@ -51,7 +51,7 @@ internal static class DataFileJsonReader
 
         try
         {
-            return JsonConvert.DeserializeObject<T>(json);
+            return JsonConvert.DeserializeObject<T>(json)!;
         }
         catch (JsonSerializationException ex)
         {

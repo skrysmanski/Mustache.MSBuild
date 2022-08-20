@@ -59,11 +59,11 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.2.0" />
-    <PackageReference Include="Stubble.Core" Version="1.9.3">
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1">
       <!-- Since this dependency is bundled in our assembly, we don't need/want to create a NuGet dependency for it. -->
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Stubble.Extensions.JsonNet" Version="1.2.3">
+    <PackageReference Include="Stubble.Core" Version="1.9.3">
       <!-- Since this dependency is bundled in our assembly, we don't need/want to create a NuGet dependency for it. -->
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

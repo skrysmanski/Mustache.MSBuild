@@ -7,7 +7,6 @@ using Newtonsoft.Json.Linq;
 
 using Stubble.Core.Builders;
 using Stubble.Core.Interfaces;
-using Stubble.Extensions.JsonNet;
 
 namespace Mustache.MSBuild.Services;
 
@@ -17,7 +16,7 @@ namespace Mustache.MSBuild.Services;
 internal static class MustacheTemplateRenderer
 {
     private static readonly IStubbleRenderer s_renderer = new StubbleBuilder()
-                                                          .Configure(settings => settings.AddJsonNet())
+                                                          .Configure(settings => settings.AddNewtonsoftJson())
                                                           .Build();
 
     /// <summary>
