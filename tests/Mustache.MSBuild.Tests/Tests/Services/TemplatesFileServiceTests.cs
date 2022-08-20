@@ -16,6 +16,8 @@ namespace Mustache.MSBuild.Tests.Services;
 /// </summary>
 public sealed class TemplatesFileServiceTests
 {
+    #region LoadTemplate
+
     [Theory]
     [InlineData(true)]
     [InlineData(false)]
@@ -87,6 +89,33 @@ public sealed class TemplatesFileServiceTests
         templateDescriptor.TemplateFileEncoding.ShouldBe(expectedTemplateFileEncoding);
     }
 
+    [Fact]
+    public void Test_LoadTemplate_InvalidEncoding()
+    {
+        // Setup
+        var fileSystem = new MockFileSystem();
+
+        const string TEMPLATE_CONTENTS = "<c>{{MyProperty}}</c>";
+        const string DATA_FILE_CONTENTS = "{ \"MyProperty\": 42, \"$Encoding\": \"my-super-invalid-encoding\" }";
+
+        fileSystem.AddFile("/templates/MyFile.txt.mustache", new MockFileData(TEMPLATE_CONTENTS, Encoding.UTF8));
+        fileSystem.AddFile("/templates/MyFile.txt.json", new MockFileData(DATA_FILE_CONTENTS, Encoding.UTF8));
+
+        var pathDescriptor = TemplatePathDescriptor.ForTemplateFile("/templates/MyFile.txt.mustache", fileSystem);
+
+        var templatesFileService = new TemplatesFileService(fileSystem);
+
+        // Test
+        var ex = Should.Throw<ErrorMessageException>(() => templatesFileService.LoadTemplate(pathDescriptor));
+
+        // Verify
+        ex.Message.ShouldContain("'my-super-invalid-encoding'");
+    }
+
+    #endregion LoadTemplate
+
+    #region WriteRenderedTemplate
+
     [Theory]
     [InlineData(true)]
     [InlineData(false)]
@@ -121,29 +150,6 @@ public sealed class TemplatesFileServiceTests
         // Verify
         fileSystem.File.Exists(pathDescriptor.PathToOutputFile).ShouldBe(true);
         fileSystem.File.ReadAllText(pathDescriptor.PathToOutputFile, Encoding.UTF8).ShouldBe(OUTPUT_CONTENT);
-    }
-
-    [Fact]
-    public void Test_LoadTemplate_InvalidEncoding()
-    {
-        // Setup
-        var fileSystem = new MockFileSystem();
-
-        const string TEMPLATE_CONTENTS = "<c>{{MyProperty}}</c>";
-        const string DATA_FILE_CONTENTS = "{ \"MyProperty\": 42, \"$Encoding\": \"my-super-invalid-encoding\" }";
-
-        fileSystem.AddFile("/templates/MyFile.txt.mustache", new MockFileData(TEMPLATE_CONTENTS, Encoding.UTF8));
-        fileSystem.AddFile("/templates/MyFile.txt.json", new MockFileData(DATA_FILE_CONTENTS, Encoding.UTF8));
-
-        var pathDescriptor = TemplatePathDescriptor.ForTemplateFile("/templates/MyFile.txt.mustache", fileSystem);
-
-        var templatesFileService = new TemplatesFileService(fileSystem);
-
-        // Test
-        var ex = Should.Throw<ErrorMessageException>(() => templatesFileService.LoadTemplate(pathDescriptor));
-
-        // Verify
-        ex.Message.ShouldContain("'my-super-invalid-encoding'");
     }
 
     [Theory]
@@ -200,4 +206,6 @@ public sealed class TemplatesFileServiceTests
             fileSystem.File.GetLastWriteTimeUtc(pathDescriptor.PathToOutputFile).ShouldBeLessThanOrEqualTo(DateTime.UtcNow);
         }
     }
+
+    #endregion WriteRenderedTemplate
 }
