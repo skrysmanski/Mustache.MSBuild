@@ -1,4 +1,6 @@
-﻿using JetBrains.Annotations;
+﻿using AppMotor.NetStandardCompat.Extensions;
+
+using JetBrains.Annotations;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -14,7 +16,7 @@ internal static class DataFileJsonReader
     public static JObject DeserializeObject(string json, string dataFileName)
     {
         // If the json is empty, DeserializeObject() below would return "null". We don't want this.
-        if (string.IsNullOrWhiteSpace(json))
+        if (json.IsNullOrWhiteSpace())
         {
             throw new ErrorMessageException($"The data file '{dataFileName}' is empty.");
         }
@@ -42,7 +44,7 @@ internal static class DataFileJsonReader
     public static T DeserializeObject<T>(string json, string dataFileName)
     {
         // If the json is empty, DeserializeObject() below would return "null". We don't want this.
-        if (string.IsNullOrWhiteSpace(json))
+        if (json.IsNullOrWhiteSpace())
         {
             throw new ErrorMessageException($"The data file '{dataFileName}' is empty.");
         }

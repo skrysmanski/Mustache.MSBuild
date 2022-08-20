@@ -2,6 +2,8 @@
 using System.Runtime.Serialization;
 using System.Text;
 
+using AppMotor.NetStandardCompat.Extensions;
+
 using JetBrains.Annotations;
 
 using Mustache.MSBuild.DataTypes;
@@ -44,7 +46,7 @@ internal sealed class TemplatesFileService
         Encoding defaultEncoding;
 
         var encodingInfo = DataFileJsonReader.DeserializeObject<EncodingInfo>(templateDataFileContents, this._fileSystem.Path.GetFileName(path));
-        if (encodingInfo.EncodingName != null && !string.IsNullOrWhiteSpace(encodingInfo.EncodingName))
+        if (!encodingInfo.EncodingName.IsNullOrWhiteSpace())
         {
             try
             {

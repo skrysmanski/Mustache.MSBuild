@@ -58,10 +58,6 @@
       <!-- This is a dev dependency. -->
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="JetBrains.Annotations" Version="2022.1.0">
-      <!-- Since this dependency is bundled in our assembly, we don't need/want to create a NuGet dependency for it. -->
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.2.0" />
     <PackageReference Include="Stubble.Core" Version="1.9.3">
       <!-- Since this dependency is bundled in our assembly, we don't need/want to create a NuGet dependency for it. -->
@@ -75,6 +71,10 @@
       <!-- Since this dependency is bundled in our assembly, we don't need/want to create a NuGet dependency for it. -->
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AppMotor.NetStandardCompat\AppMotor.NetStandardCompat.csproj" />
   </ItemGroup>
 
 </Project>
