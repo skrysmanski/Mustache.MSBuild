@@ -7,8 +7,6 @@ using JetBrains.Annotations;
 using Mustache.MSBuild.DataTypes;
 using Mustache.MSBuild.Utils;
 
-using Newtonsoft.Json;
-
 namespace Mustache.MSBuild.Services;
 
 internal sealed class TemplatesFileService
@@ -35,7 +33,8 @@ internal sealed class TemplatesFileService
             mustacheTemplate: template,
             templateDataJson: templateDataFileContents,
             mustacheTemplateFileName: this._fileSystem.Path.GetFileName(templatePathDescriptor.PathToMustacheFile),
-            templateFileEncoding: templateFileEncoding
+            templateFileEncoding: templateFileEncoding,
+            dataFileName: this._fileSystem.Path.GetFileName(templatePathDescriptor.PathToDataFile)
         );
     }
 
@@ -44,8 +43,8 @@ internal sealed class TemplatesFileService
     {
         Encoding defaultEncoding;
 
-        var encodingInfo = JsonConvert.DeserializeObject<EncodingInfo>(templateDataFileContents);
-        if (encodingInfo?.EncodingName != null && !string.IsNullOrWhiteSpace(encodingInfo.EncodingName))
+        var encodingInfo = DataFileJsonReader.DeserializeObject<EncodingInfo>(templateDataFileContents, this._fileSystem.Path.GetFileName(path));
+        if (encodingInfo.EncodingName != null && !string.IsNullOrWhiteSpace(encodingInfo.EncodingName))
         {
             try
             {

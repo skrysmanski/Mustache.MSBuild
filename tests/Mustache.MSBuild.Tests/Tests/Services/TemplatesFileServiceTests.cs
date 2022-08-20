@@ -112,6 +112,29 @@ public sealed class TemplatesFileServiceTests
         ex.Message.ShouldContain("'my-super-invalid-encoding'");
     }
 
+    [Fact]
+    public void Test_LoadTemplate_InvalidDataJson()
+    {
+        // Setup
+        var fileSystem = new MockFileSystem();
+
+        const string TEMPLATE_CONTENTS = "<c>{{MyProperty}}</c>";
+        const string DATA_FILE_CONTENTS = "{ \"MyProperty\": 42";
+
+        fileSystem.AddFile("/templates/MyFile.txt.mustache", new MockFileData(TEMPLATE_CONTENTS, Encoding.UTF8));
+        fileSystem.AddFile("/templates/MyFile.txt.json", new MockFileData(DATA_FILE_CONTENTS, Encoding.UTF8));
+
+        var pathDescriptor = TemplatePathDescriptor.ForTemplateFile("/templates/MyFile.txt.mustache", fileSystem);
+
+        var templatesFileService = new TemplatesFileService(fileSystem);
+
+        // Test
+        var ex = Should.Throw<ErrorMessageException>(() => templatesFileService.LoadTemplate(pathDescriptor));
+
+        // Verify
+        ex.Message.ShouldContain("The content of data file 'MyFile.txt.mustache' is invalid:");
+    }
+
     #endregion LoadTemplate
 
     #region WriteRenderedTemplate

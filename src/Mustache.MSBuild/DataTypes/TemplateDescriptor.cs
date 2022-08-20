@@ -27,11 +27,23 @@ internal sealed class TemplateDescriptor
     /// </summary>
     public Encoding TemplateFileEncoding { get; }
 
-    public TemplateDescriptor(string mustacheTemplate, string templateDataJson, string mustacheTemplateFileName, Encoding templateFileEncoding)
+    /// <summary>
+    /// The name of the data file.
+    /// </summary>
+    public string DataFileName { get; }
+
+    public TemplateDescriptor(
+            string mustacheTemplate,
+            string templateDataJson,
+            string mustacheTemplateFileName,
+            Encoding templateFileEncoding,
+            string dataFileName
+        )
     {
         this.MustacheTemplate = mustacheTemplate;
         this.TemplateDataJson = templateDataJson;
         this.MustacheTemplateFileName = mustacheTemplateFileName;
         this.TemplateFileEncoding = templateFileEncoding;
+        this.DataFileName = dataFileName;
     }
 }
