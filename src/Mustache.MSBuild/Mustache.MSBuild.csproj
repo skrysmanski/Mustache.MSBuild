@@ -47,6 +47,11 @@
             in the wrong folder (contentFiles\any\netstandard2.0\build\).
     -->
     <Content Include="build\*.*" PackagePath="build\" />
+    <!-- This is required so that changes to files in the "build" folder mark the project as "dirty" in Visual Studio.
+         Without this, even when the files in the "build" folder changed, Visual Studio would still think the project
+         is up-to-date and not build it.
+    -->
+    <UpToDateCheckInput Include="build\*.*" />
   </ItemGroup>
 
   <ItemGroup>
