@@ -6,15 +6,10 @@
     <MustacheFiles Include="**/*.mustache" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <!-- Register "RenderMustacheTemplates" to run before a project is built. -->
-    <CoreCompileDependsOn>RenderMustacheTemplates;$(CoreCompileDependsOn)</CoreCompileDependsOn>
-  </PropertyGroup>
-
   <!--
     Renders all templates in the "MustacheFiles" item group.
   -->
-  <Target Name="RenderMustacheTemplates" Condition=" '@(MustacheFiles)' != '' ">
+  <Target Name="RenderMustacheTemplates" Condition=" '@(MustacheFiles)' != '' " BeforeTargets="BeforeResGen">
     <RenderMustacheTemplates TemplatePaths="@(MustacheFiles)" />
   </Target>
 
