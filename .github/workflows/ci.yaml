@@ -55,12 +55,9 @@ jobs:
           # NOTE: Apparently only the 3rd component can be "x"; i.e. "5.x" is not supported.
           dotnet-version: '6.0.x'
 
-      - run: dotnet restore
-        name: Download NuGet dependencies
-
       # See: https://docs.microsoft.com/de-de/dotnet/core/tools/dotnet-build
       # NOTE: Without specifying a solution file, "dotnet build" searches for a .sln file in the current directory.
-      - run: dotnet build --configuration Release --no-restore
+      - run: dotnet build --configuration Release
         name: Build main solution
 
       # See: https://docs.microsoft.com/de-de/dotnet/core/tools/dotnet-test
