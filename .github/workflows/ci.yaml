@@ -1,0 +1,94 @@
+#
+# GitHub Actions workflow: Builds and tests the code in this repository.
+#
+# For more details on workflows, see README.md.
+#
+
+# IMPORTANT: When changing this name, also change the name in the trigger section in "test-report.yaml".
+name: CI
+
+# When to run this workflow
+# See: https://docs.github.com/en/actions/reference/events-that-trigger-workflows
+# See: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#on
+on:
+  # Trigger the workflow on push or pull request, but only for the main branch.
+  # Reason: Until a feature branch is converted into a pull request, there's no (real) need
+  #   to have this workflow waste resources and trigger 'workflow did not work' emails.
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+# Permissions for GITHUB_TOKEN for this workflow.
+# See: https://docs.github.com/en/actions/reference/authentication-in-a-workflow#permissions-for-the-github_token
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    # Name the job
+    name: Build & Test
+    # Set the type of machine to run on
+    # See: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+    runs-on: ubuntu-latest
+
+    steps:
+      # See: https://github.com/actions/checkout
+      - uses: actions/checkout@v2
+        name: Clone Git repository
+        with:
+          lfs: true
+          submodules: true
+
+      # This creates ${{ steps.short-sha.outputs.sha }} to be used below.
+      # See: https://github.com/marketplace/actions/short-sha
+      - uses: benjlevesque/short-sha@56c9032868f85fc82058ff0793e58ab97bb2b856
+        name: Determine Git short commit hash
+        id: short-sha
+
+      # See: https://github.com/actions/setup-dotnet
+      - uses: actions/setup-dotnet@v1
+        name: Setup .NET build environment
+        with:
+          # NOTE: Apparently only the 3rd component can be "x"; i.e. "5.x" is not supported.
+          dotnet-version: '6.0.x'
+
+      - run: dotnet restore
+        name: Download NuGet dependencies
+
+      # See: https://docs.microsoft.com/de-de/dotnet/core/tools/dotnet-build
+      # NOTE: Without specifying a solution file, "dotnet build" searches for a .sln file in the current directory.
+      - run: dotnet build --configuration Release --no-restore
+        name: Build main solution
+
+      # See: https://docs.microsoft.com/de-de/dotnet/core/tools/dotnet-test
+      # NOTE: Without specifying a solution file, "dotnet test" searches for a .sln file in the current directory.
+      # NOTE 2: There seems to be no way to name the .trx file as '<project>.trx'. If no 'LogFileName' is specified,
+      #   the .trx files will be named something like "_fv-az278-737_2021-08-15_03_50_33.trx".
+      - run: RUNS_IN_CI=true dotnet test --configuration Release --no-restore --no-build --logger "trx;LogFileName=test-results.trx" --nologo
+        name: Run tests
+
+      # See: https://github.com/actions/upload-artifact
+      - uses: actions/upload-artifact@v2
+        name: Upload test results
+        # Run this step even if any of the previous steps has failed
+        if: success() || failure()
+        with:
+          # NOTE: To make the downloads of the test results easier to use (i.e. when downloading test results
+          #   from different runs), we'll add an id to the name.
+          #
+          #   We don't just use the sha because this workflow also runs on a schedule - which means that different
+          #   runs would again create files with the same name (e.g. two consecutive scheduled runs while the
+          #   repo hasn't changed in the meantime).
+          #
+          #   Instead we use 'github.run_number' because this gives us the same number that's also shown in the
+          #   ui - like 27 for run #27 ('github.run_id' on the other hand gives us some "random" big number like
+          #   1152888876 - which is less useful). For more details, see:
+          #   https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#github-context
+          #
+          # NOTE: We put the "run_number" first so that the result zip file can be sorted by name.
+          name: 'test-results-#${{ github.run_number }}-${{ steps.short-sha.outputs.sha }}'
+          path: '**/*.trx'
+          if-no-files-found: error
