@@ -22,7 +22,11 @@ on:
       - main
 
 # Permissions for GITHUB_TOKEN for this workflow.
-# See: https://docs.github.com/en/actions/reference/authentication-in-a-workflow#permissions-for-the-github_token
+#   See: https://docs.github.com/en/actions/reference/authentication-in-a-workflow#permissions-for-the-github_token
+# NOTE: Because of this, we don't use "@hash" but "@vX" for non-GitHub steps below. Usually you would use "@hash"
+#   as a security measure to pin a specific version. However, since we run with the minimal permissions
+#   here, malicious code couldn't do much harm (most likely).
+#   See: https://blog.gitguardian.com/github-actions-security-cheat-sheet/#use-specific-action-version-tags
 permissions:
   contents: read
 
@@ -36,42 +40,48 @@ jobs:
 
     steps:
       # See: https://github.com/actions/checkout
-      - uses: actions/checkout@v3
-        name: Clone Git repository
+      - name: Clone Git repository
+        uses: actions/checkout@v3
         with:
           lfs: true
           submodules: true
 
       # This creates ${{ steps.short-sha.outputs.sha }} to be used below.
       # See: https://github.com/marketplace/actions/short-sha
-      - uses: benjlevesque/short-sha@56c9032868f85fc82058ff0793e58ab97bb2b856
-        name: Determine Git short commit hash
+      - name: Determine Git short commit hash
         id: short-sha
+        uses: benjlevesque/short-sha@v1.2
 
       # See: https://github.com/actions/setup-dotnet
-      - uses: actions/setup-dotnet@v2
-        name: Setup .NET build environment
+      - name: Setup .NET build environment
+        uses: actions/setup-dotnet@v2
         with:
           # NOTE: Apparently only the 3rd component can be "x"; i.e. "5.x" is not supported.
           dotnet-version: '6.0.x'
 
       # See: https://docs.microsoft.com/de-de/dotnet/core/tools/dotnet-build
       # NOTE: Without specifying a solution file, "dotnet build" searches for a .sln file in the current directory.
-      - run: dotnet build --configuration Release
-        name: Build main solution
+      - name: Build code
+        run: dotnet build --configuration Release
 
       # See: https://docs.microsoft.com/de-de/dotnet/core/tools/dotnet-test
       # NOTE: Without specifying a solution file, "dotnet test" searches for a .sln file in the current directory.
       # NOTE 2: There seems to be no way to name the .trx file as '<project>.trx'. If no 'LogFileName' is specified,
       #   the .trx files will be named something like "_fv-az278-737_2021-08-15_03_50_33.trx".
-      - run: RUNS_IN_CI=true dotnet test --configuration Release --no-restore --no-build --logger "trx;LogFileName=test-results.trx" --nologo
-        name: Run tests
+      - name: Run tests
+        id: run_tests
+        run: dotnet test --configuration Release --no-restore --no-build --logger "trx;LogFileName=${{ runner.os }}.trx" --nologo
+        env:
+          # Tells tests that they're running in a (potentially slow) CI environment.
+          RUNS_IN_CI: true
 
       # See: https://github.com/actions/upload-artifact
-      - uses: actions/upload-artifact@v3
-        name: Upload test results
-        # Run this step even if any of the previous steps has failed
-        if: success() || failure()
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        # Run this step even if "run_tests" has failed (but not if any other previous step has failed - which would
+        # be "failure()" - because in this case the tests have not run and thus no .trx files have been generated).
+        # See: https://docs.github.com/en/actions/learn-github-actions/expressions#failure
+        if: success() || steps.run_tests.conclusion == 'failure'
         with:
           # NOTE: To make the downloads of the test results easier to use (i.e. when downloading test results
           #   from different runs), we'll add an id to the name.
@@ -86,6 +96,6 @@ jobs:
           #   https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#github-context
           #
           # NOTE: We put the "run_number" first so that the result zip file can be sorted by name.
-          name: 'test-results-#${{ github.run_number }}-${{ steps.short-sha.outputs.sha }}'
+          name: 'test-results-#${{ github.run_number }}-${{ steps.short-sha.outputs.sha }}-${{ runner.os }}'
           path: '**/*.trx'
           if-no-files-found: error

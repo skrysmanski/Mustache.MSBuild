@@ -50,8 +50,9 @@ jobs:
 
     steps:
       # See: https://github.com/marketplace/actions/test-reporter
-      - uses: dorny/test-reporter@0d00bb14cb0cc2c9b8985df6e81dd333188224e1
-        name: Create test report
+      - name: Create test report
+        # For pinned versions, see: https://blog.gitguardian.com/github-actions-security-cheat-sheet/#use-specific-action-version-tags
+        uses: dorny/test-reporter@0d00bb14cb0cc2c9b8985df6e81dd333188224e1 # version 1.5.0
         with:
           # NOTE: We add the 'github.run_number' to the name so that we can easier identify the
           #   test report if they pile up due to bug https://github.com/dorny/test-reporter/issues/67.
