@@ -26,7 +26,7 @@ name: 'Generate Test Report'
 # See: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#on
 on:
   workflow_run:
-    # Runs after CI workflow (but not after the 'CI (Scheduled)' workflow!)
+    # Runs after CI workflow.
     # NOTE: The name here is the value of the 'name' property of the
     #   workflow - NOT the name of the file.
     workflows: ['CI']
