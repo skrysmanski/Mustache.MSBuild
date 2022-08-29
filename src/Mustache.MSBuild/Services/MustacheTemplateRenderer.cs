@@ -1,4 +1,7 @@
-﻿using JetBrains.Annotations;
+﻿// SPDX-License-Identifier: MIT
+// Copyright Mustache.MSBuild (https://github.com/skrysmanski/Mustache.MSBuild)
+
+using JetBrains.Annotations;
 
 using Mustache.MSBuild.DataTypes;
 using Mustache.MSBuild.Utils;

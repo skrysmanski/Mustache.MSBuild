@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿// SPDX-License-Identifier: MIT
+// Copyright Mustache.MSBuild (https://github.com/skrysmanski/Mustache.MSBuild)
+
+using System.Text;
 
 namespace Mustache.MSBuild.DataTypes;
 

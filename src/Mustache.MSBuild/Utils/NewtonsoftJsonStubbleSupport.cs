@@ -1,4 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
+﻿// SPDX-License-Identifier: MIT
+// Copyright Mustache.MSBuild (https://github.com/skrysmanski/Mustache.MSBuild)
+
+using Newtonsoft.Json.Linq;
 
 using Stubble.Core.Settings;
 

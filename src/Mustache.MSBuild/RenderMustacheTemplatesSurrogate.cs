@@ -1,4 +1,7 @@
-﻿using System.IO.Abstractions;
+﻿// SPDX-License-Identifier: MIT
+// Copyright Mustache.MSBuild (https://github.com/skrysmanski/Mustache.MSBuild)
+
+using System.IO.Abstractions;
 
 using Microsoft.Build.Framework;
 using Mustache.MSBuild.DataTypes;

@@ -1,4 +1,7 @@
-﻿using Microsoft.Build.Utilities;
+﻿// SPDX-License-Identifier: MIT
+// Copyright Mustache.MSBuild (https://github.com/skrysmanski/Mustache.MSBuild)
+
+using Microsoft.Build.Utilities;
 
 namespace Mustache.MSBuild.Utils;
 

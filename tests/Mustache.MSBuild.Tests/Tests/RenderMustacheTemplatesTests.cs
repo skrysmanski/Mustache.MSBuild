@@ -1,4 +1,7 @@
-﻿using System.Runtime.Serialization;
+﻿// SPDX-License-Identifier: MIT
+// Copyright Mustache.MSBuild (https://github.com/skrysmanski/Mustache.MSBuild)
+
+using System.Runtime.Serialization;
 
 using AppMotor.Core.Processes;
 using AppMotor.TestCore;
