@@ -74,4 +74,23 @@ public sealed class MustacheTemplateRendererTests
         // Verify
         ex.Message.ShouldStartWith("The content of data file 'MyFile.cs.json' is not an object but a JArray.");
     }
+
+    [Fact]
+    public void Test_RenderTemplate_UnresolvedToken()
+    {
+        // Setup
+        var templateDescriptor = new TemplateDescriptor(
+            mustacheTemplate: "<b>{{MyUnresolvedToken}}</b> - <c>{{MyResolvedToken}}</c> - <i>{{MyNullToken}}</i>",
+            templateDataJson: "{ \"MyResolvedToken\": 123, \"MyNullToken\": null }",
+            mustacheTemplateFileName: "MyFile.cs.mustache",
+            templateFileEncoding: Encoding.UTF8,
+            dataFileName: "MyFile.cs.json"
+        );
+
+        // Test
+        var renderedTemplate = MustacheTemplateRenderer.RenderTemplate(templateDescriptor);
+
+        // Verify
+        renderedTemplate.ShouldBe("<b>{{MyUnresolvedToken}}</b> - <c>123</c> - <i></i>");
+    }
 }

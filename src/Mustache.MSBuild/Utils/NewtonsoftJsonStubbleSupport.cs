@@ -22,12 +22,13 @@ internal static class NewtonsoftJsonStubbleSupport
     {
         var jObject = (JObject)container;
 
-        var value = jObject.GetValue(key, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
-
-        if (value is null)
+        var property = jObject.Property(key, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+        if (property is null)
         {
-            return null;
+            return "{{" + key + "}}";
         }
+
+        var value = property.Value;
 
         switch (value.Type)
         {
