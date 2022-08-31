@@ -28,61 +28,53 @@ internal sealed class RenderMustacheTemplatesSurrogate
 
     public bool Execute(ITaskItem[]? templatePaths, IMsBuildLogger logger)
     {
-        try
+        if (templatePaths is null || templatePaths.Length == 0)
         {
-            if (templatePaths is null || templatePaths.Length == 0)
-            {
-                return true;
-            }
+            return true;
+        }
 
-            bool success = true;
+        bool success = true;
 
-            foreach (var templatePath in templatePaths)
+        foreach (var templatePath in templatePaths)
+        {
+            try
             {
-                try
+                var templatePathDescriptor = TemplatePathDescriptor.ForTemplateFile(pathToMustacheFile: templatePath.ItemSpec, this._fileSystem);
+
+                if (!this._fileSystem.File.Exists(templatePathDescriptor.PathToMustacheFile))
                 {
-                    var templatePathDescriptor = TemplatePathDescriptor.ForTemplateFile(pathToMustacheFile: templatePath.ItemSpec, this._fileSystem);
+                    logger.LogWarning("The template file '{0}' doesn't exist. Ignoring it.", templatePathDescriptor.PathToMustacheFile);
+                    continue;
+                }
 
-                    if (!this._fileSystem.File.Exists(templatePathDescriptor.PathToMustacheFile))
-                    {
-                        logger.LogWarning("The template file '{0}' doesn't exist. Ignoring it.", templatePathDescriptor.PathToMustacheFile);
-                        continue;
-                    }
-
-                    if (!this._fileSystem.File.Exists(templatePathDescriptor.PathToDataFile))
-                    {
-                        logger.LogWarning(
-                            "The data file '{0}' is missing for template file '{1}'. Ignoring it.",
-                            Path.GetFileName(templatePathDescriptor.PathToDataFile),
-                            templatePathDescriptor.PathToMustacheFile
-                        );
-                        continue;
-                    }
-
-                    var templateDescriptor = this._templatesFileService.LoadTemplate(templatePathDescriptor);
-
-                    var renderedTemplate = MustacheTemplateRenderer.RenderTemplate(templateDescriptor);
-
-                    this._templatesFileService.WriteRenderedTemplate(
-                        templatePathDescriptor,
-                        renderedTemplate,
-                        templateDescriptor.TemplateFileEncoding,
-                        onlyWriteFileIfContentsHaveChanged: true
+                if (!this._fileSystem.File.Exists(templatePathDescriptor.PathToDataFile))
+                {
+                    logger.LogWarning(
+                        "The data file '{0}' is missing for template file '{1}'. Ignoring it.",
+                        Path.GetFileName(templatePathDescriptor.PathToDataFile),
+                        templatePathDescriptor.PathToMustacheFile
                     );
+                    continue;
                 }
-                catch (Exception ex)
-                {
-                    logger.LogErrorFromException(ex);
-                    success = false;
-                }
-            }
 
-            return success;
+                var templateDescriptor = this._templatesFileService.LoadTemplate(templatePathDescriptor);
+
+                var renderedTemplate = MustacheTemplateRenderer.RenderTemplate(templateDescriptor);
+
+                this._templatesFileService.WriteRenderedTemplate(
+                    templatePathDescriptor,
+                    renderedTemplate,
+                    templateDescriptor.TemplateFileEncoding,
+                    onlyWriteFileIfContentsHaveChanged: true
+                );
+            }
+            catch (Exception ex)
+            {
+                logger.LogErrorFromException(ex);
+                success = false;
+            }
         }
-        catch (Exception ex)
-        {
-            logger.LogErrorFromException(ex);
-            return false;
-        }
+
+        return success;
     }
 }
