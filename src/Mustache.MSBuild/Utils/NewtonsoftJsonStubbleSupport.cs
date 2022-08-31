@@ -14,7 +14,6 @@ internal static class NewtonsoftJsonStubbleSupport
     public static void AddNewtonsoftJson(this RendererSettingsBuilder builder)
     {
         builder.AddValueGetter(typeof(JObject), GetValueFromJObject);
-        builder.AddValueGetter(typeof(JProperty), GetValueFromJProperty);
         builder.AddSectionBlacklistType(typeof(JObject));
     }
 
@@ -42,12 +41,5 @@ internal static class NewtonsoftJsonStubbleSupport
         }
 
         return (value as JValue)?.Value;
-    }
-
-    private static object GetValueFromJProperty(object container, string key, bool ignoreCase)
-    {
-        var value = ((JProperty)container).Value;
-
-        return (value as JValue)?.Value ?? value;
     }
 }
