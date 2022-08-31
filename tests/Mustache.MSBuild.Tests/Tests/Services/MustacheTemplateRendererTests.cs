@@ -131,4 +131,23 @@ public sealed class MustacheTemplateRendererTests
         // Verify
         renderedTemplate.ShouldBe(" - 123");
     }
+
+    [Fact]
+    public void Test_RenderTemplate_SubObject()
+    {
+        // Setup
+        var templateDescriptor = new TemplateDescriptor(
+            mustacheTemplate: "{{#foo}}{{bar}},{{zar}}{{/foo}}",
+            templateDataJson: "{ foo: { bar: \"foobar\", \"zar\": \"zoo\" } }",
+            mustacheTemplateFileName: "MyFile.cs.mustache",
+            templateFileEncoding: Encoding.UTF8,
+            dataFileName: "MyFile.cs.json"
+        );
+
+        // Test
+        var renderedTemplate = MustacheTemplateRenderer.RenderTemplate(templateDescriptor);
+
+        // Verify
+        renderedTemplate.ShouldBe("foobar,zoo");
+    }
 }

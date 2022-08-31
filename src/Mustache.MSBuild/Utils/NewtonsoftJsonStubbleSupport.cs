@@ -14,6 +14,12 @@ internal static class NewtonsoftJsonStubbleSupport
     public static void AddNewtonsoftJson(this RendererSettingsBuilder builder)
     {
         builder.AddValueGetter(typeof(JObject), GetValueFromJObject);
+
+        // NOTE: This is (somehow) required to make sub objects work correctly.
+        //   Apparently, a section is something like "{{#users}}" and the section
+        //   blacklist prevents Stubble from applying the default interpretation
+        //   for sections of type "JObject" (and instead use the value getter defined
+        //   above).
         builder.AddSectionBlacklistType(typeof(JObject));
     }
 
