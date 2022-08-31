@@ -21,13 +21,13 @@ namespace Mustache.MSBuild.Tests;
 /// Uses the built NuGet package in a test project to render a template - both with "dotnet build"
 /// and "MSBuild" (Windows only).
 /// </summary>
-public sealed class RenderMustacheTemplatesTests
+public sealed class EndToEndTests
 {
     private readonly ITestOutputHelper _testOutputHelper;
 
     private readonly string _projectDir;
 
-    public RenderMustacheTemplatesTests(ITestOutputHelper testOutputHelper)
+    public EndToEndTests(ITestOutputHelper testOutputHelper)
     {
         this._testOutputHelper = testOutputHelper;
 

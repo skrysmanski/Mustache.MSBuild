@@ -40,6 +40,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mustache.MSBuild", "src\Mus
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mustache.MSBuild.Tests", "tests\Mustache.MSBuild.Tests\Mustache.MSBuild.Tests.csproj", "{79D82E24-866A-4B08-8C32-C8322790D082}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mustache.MSBuild.IntegrationTests", "tests\Mustache.MSBuild.IntegrationTests\Mustache.MSBuild.IntegrationTests.csproj", "{AAF9C7E3-1277-4914-B99B-ADE696CDA3DA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BAAC0339-D061-45E7-B9DF-E90961465910} = {BAAC0339-D061-45E7-B9DF-E90961465910}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +59,10 @@ Global
 		{79D82E24-866A-4B08-8C32-C8322790D082}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79D82E24-866A-4B08-8C32-C8322790D082}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79D82E24-866A-4B08-8C32-C8322790D082}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAF9C7E3-1277-4914-B99B-ADE696CDA3DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAF9C7E3-1277-4914-B99B-ADE696CDA3DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAF9C7E3-1277-4914-B99B-ADE696CDA3DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAF9C7E3-1277-4914-B99B-ADE696CDA3DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -62,6 +71,7 @@ Global
 		{BA1E9B9F-AD3B-41A4-B9AC-490A101FD762} = {D449EFC6-4D96-4FF2-B01F-A4748B50D9C3}
 		{BAAC0339-D061-45E7-B9DF-E90961465910} = {32140DA4-CE8A-43BC-B6BF-256C90495E1E}
 		{79D82E24-866A-4B08-8C32-C8322790D082} = {80C6C1F6-CB66-493B-B8E1-276D4CCFB170}
+		{AAF9C7E3-1277-4914-B99B-ADE696CDA3DA} = {80C6C1F6-CB66-493B-B8E1-276D4CCFB170}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FF64C9CC-C599-47C6-892D-FB620795361C}
