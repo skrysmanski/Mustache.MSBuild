@@ -18,9 +18,20 @@ namespace Mustache.MSBuild.Services;
 /// </summary>
 internal static class MustacheTemplateRenderer
 {
-    private static readonly IStubbleRenderer s_renderer = new StubbleBuilder()
-                                                          .Configure(settings => settings.AddNewtonsoftJson())
-                                                          .Build();
+    private static readonly Lazy<IStubbleRenderer> s_renderer = new(CreateRenderer);
+
+    [MustUseReturnValue]
+    private static IStubbleRenderer CreateRenderer()
+    {
+        return new StubbleBuilder()
+            .Configure(settings =>
+                {
+                    settings.AddNewtonsoftJson();
+                    settings.SetIgnoreCaseOnKeyLookup(true);
+                }
+            )
+            .Build();
+    }
 
     /// <summary>
     /// Renders the specified template and returns it.
@@ -33,6 +44,6 @@ internal static class MustacheTemplateRenderer
         // Adds variables that are always available.
         templateData.Add("TemplateFile", new JValue(templateDescriptor.MustacheTemplateFileName));
 
-        return s_renderer.Render(templateDescriptor.MustacheTemplate, templateData);
+        return s_renderer.Value.Render(templateDescriptor.MustacheTemplate, templateData);
     }
 }

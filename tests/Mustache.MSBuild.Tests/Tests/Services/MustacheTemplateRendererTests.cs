@@ -38,6 +38,25 @@ public sealed class MustacheTemplateRendererTests
     }
 
     [Fact]
+    public void Test_RenderTemplate_DifferentCasing()
+    {
+        // Setup
+        var templateDescriptor = new TemplateDescriptor(
+            mustacheTemplate: "<b>{{MyTemplateVALUE}}</b> - <c>{{TemplateFILE}}</c>",
+            templateDataJson: "{ \"MyTemplateValue\": 123 }",
+            mustacheTemplateFileName: "MyFile.cs.mustache",
+            templateFileEncoding: Encoding.UTF8,
+            dataFileName: "MyFile.cs.json"
+        );
+
+        // Test
+        var renderedTemplate = MustacheTemplateRenderer.RenderTemplate(templateDescriptor);
+
+        // Verify
+        renderedTemplate.ShouldBe("<b>123</b> - <c>MyFile.cs.mustache</c>");
+    }
+
+    [Fact]
     public void Test_RenderTemplate_InvalidJson()
     {
         // Setup
