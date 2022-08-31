@@ -91,6 +91,25 @@ public sealed class MustacheTemplateRendererTests
         var renderedTemplate = MustacheTemplateRenderer.RenderTemplate(templateDescriptor);
 
         // Verify
-        renderedTemplate.ShouldBe("<b>{{MyUnresolvedToken}}</b> - <c>123</c> - <i></i>");
+        renderedTemplate.ShouldBe("<b></b> - <c>123</c> - <i></i>");
+    }
+
+    [Fact]
+    public void Test_RenderTemplate_UnresolvedToken_List()
+    {
+        // Setup
+        var templateDescriptor = new TemplateDescriptor(
+            mustacheTemplate: "{{#users}}\n{{.}}\n{{/users}} - {{MyResolvedToken}}",
+            templateDataJson: "{ \"MyResolvedToken\": 123 }",
+            mustacheTemplateFileName: "MyFile.cs.mustache",
+            templateFileEncoding: Encoding.UTF8,
+            dataFileName: "MyFile.cs.json"
+        );
+
+        // Test
+        var renderedTemplate = MustacheTemplateRenderer.RenderTemplate(templateDescriptor);
+
+        // Verify
+        renderedTemplate.ShouldBe(" - 123");
     }
 }

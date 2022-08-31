@@ -25,7 +25,11 @@ internal static class NewtonsoftJsonStubbleSupport
         var property = jObject.Property(key, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
         if (property is null)
         {
-            return "{{" + key + "}}";
+            // NOTE: While it would be possible to return "{{key}}" here (i.e. making unresolved tokens
+            //   appear as they were declared), this only works (properly) for "{{token}}" but not, for example,
+            //   for loop tokens like "{{#users}}" (since we can't get the "#" char here). So instead we
+            //   keep the "default" and return "null".
+            return null;
         }
 
         var value = property.Value;
