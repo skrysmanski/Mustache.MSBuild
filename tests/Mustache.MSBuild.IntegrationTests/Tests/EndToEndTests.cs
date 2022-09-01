@@ -212,7 +212,7 @@ public sealed class EndToEndTests
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include=""Mustache.MSBuild"" Version=""0.1.0"">
+        <PackageReference Include=""Mustache.MSBuild"" Version=""0.2.0-preview-1"">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
     </ItemGroup>
