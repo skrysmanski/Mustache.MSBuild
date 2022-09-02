@@ -2,6 +2,7 @@
 // Copyright Mustache.MSBuild (https://github.com/skrysmanski/Mustache.MSBuild)
 
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 
 using AppMotor.Core.Processes;
 using AppMotor.TestCore;
@@ -40,7 +41,7 @@ public sealed class EndToEndTests
 
         var buildPackagesDir = Path.GetFullPath("TestResources/built-packages");
         CreateNuGetConfig(this._projectDir, buildPackagesDir);
-        CreateTestProjectFile(this._projectDir);
+        CreateTestProjectFile(this._projectDir, buildPackagesDir);
 
         DeleteDirectory($"{this._projectDir}/bin");
         DeleteDirectory($"{this._projectDir}/obj");
@@ -201,10 +202,23 @@ public sealed class EndToEndTests
         File.WriteAllText($"{projectDir}/NuGet.config", fileContents.TrimStart());
     }
 
-    private static void CreateTestProjectFile(string projectDir)
+    private void CreateTestProjectFile(string projectDir, string builtPackageDir)
     {
+        var nuGetPackages = Directory.EnumerateFiles(builtPackageDir, $"{NUGET_PACKAGE_NAME}.*.nupkg").Select(Path.GetFileName).ToList();
+        nuGetPackages.Count.ShouldBe(1, $"Found more than one NuGet package: {string.Join(", ", nuGetPackages)}");
+
+        var selectedNuGetPackage = nuGetPackages[0];
+        selectedNuGetPackage.ShouldNotBeNull();
+
+        var packageVersionRegex = new Regex($@"^{Regex.Escape(NUGET_PACKAGE_NAME)}\.(.+)\.nupkg$", RegexOptions.IgnoreCase);
+        var match = packageVersionRegex.Match(selectedNuGetPackage);
+        match.Success.ShouldBe(true);
+
+        var version = match.Groups[1].Value;
+        this._testOutputHelper.WriteLine($"Found NuGet version: {version}");
+
         // language=xml
-        const string PROJECT_FILE_CONTENTS = $@"
+        string projectFileContents = $@"
 <Project Sdk=""Microsoft.NET.Sdk"">
 
     <PropertyGroup>
@@ -214,7 +228,7 @@ public sealed class EndToEndTests
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include=""{NUGET_PACKAGE_NAME}"" Version=""0.2.0-preview-1"">
+        <PackageReference Include=""{NUGET_PACKAGE_NAME}"" Version=""{version}"">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
     </ItemGroup>
@@ -222,7 +236,7 @@ public sealed class EndToEndTests
 </Project>
 ";
 
-        File.WriteAllText($"{projectDir}/TemplateSampleProject.csproj", PROJECT_FILE_CONTENTS);
+        File.WriteAllText($"{projectDir}/TemplateSampleProject.csproj", projectFileContents);
     }
 
     private void CreateTemplateFile(bool secondContent)
