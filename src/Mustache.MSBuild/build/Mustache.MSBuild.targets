@@ -3,7 +3,15 @@
   <Import Project="$(MSBuildThisFileDirectory)Mustache.MSBuild.tasks" />
 
   <ItemGroup>
+
     <MustacheFiles Include="**/*.mustache" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+
+    <!-- This is required so that changes to mustache files mark the project as "dirty" in Visual Studio.
+         Without this, Visual Studio would think the project is up-to-date even if some mustache files have
+         been changed (and thus not build it again).
+    -->
+    <UpToDateCheckInput Include="@(MustacheFiles)" />
+
   </ItemGroup>
 
   <!--
