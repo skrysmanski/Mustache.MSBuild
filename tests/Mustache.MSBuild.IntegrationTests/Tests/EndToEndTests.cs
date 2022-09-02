@@ -23,6 +23,8 @@ namespace Mustache.MSBuild.Tests;
 /// </summary>
 public sealed class EndToEndTests
 {
+    private const string NUGET_PACKAGE_NAME = "Mustache.MSBuild";
+
     private readonly ITestOutputHelper _testOutputHelper;
 
     private readonly string _projectDir;
@@ -190,7 +192,7 @@ public sealed class EndToEndTests
             <package pattern=""*"" />
         </packageSource>
         <packageSource key=""LocalTest"">
-            <package pattern=""Mustache.MSBuild"" />
+            <package pattern=""{NUGET_PACKAGE_NAME}"" />
         </packageSource>
     </packageSourceMapping>
 </configuration>
@@ -202,7 +204,7 @@ public sealed class EndToEndTests
     private static void CreateTestProjectFile(string projectDir)
     {
         // language=xml
-        const string PROJECT_FILE_CONTENTS = @"
+        const string PROJECT_FILE_CONTENTS = $@"
 <Project Sdk=""Microsoft.NET.Sdk"">
 
     <PropertyGroup>
@@ -212,7 +214,7 @@ public sealed class EndToEndTests
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include=""Mustache.MSBuild"" Version=""0.2.0-preview-1"">
+        <PackageReference Include=""{NUGET_PACKAGE_NAME}"" Version=""0.2.0-preview-1"">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
     </ItemGroup>
