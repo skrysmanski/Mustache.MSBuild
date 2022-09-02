@@ -61,12 +61,21 @@ internal sealed class RenderMustacheTemplatesSurrogate
 
                 var renderedTemplate = MustacheTemplateRenderer.RenderTemplate(templateDescriptor);
 
-                this._templatesFileService.WriteRenderedTemplate(
+                bool fileWasChanged = this._templatesFileService.WriteRenderedTemplate(
                     templatePathDescriptor,
                     renderedTemplate,
                     templateDescriptor.TemplateFileEncoding,
                     onlyWriteFileIfContentsHaveChanged: true
                 );
+
+                if (fileWasChanged)
+                {
+                    logger.LogMessage("The file '{0}' has been updated from template '{1}'.", templatePathDescriptor.PathToOutputFile, templatePathDescriptor.PathToMustacheFile);
+                }
+                else
+                {
+                    logger.LogMessage("The template target file '{0}' is already up-to-date.", templatePathDescriptor.PathToOutputFile);
+                }
             }
             catch (Exception ex)
             {

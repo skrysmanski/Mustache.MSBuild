@@ -13,6 +13,12 @@ namespace Mustache.MSBuild.Utils;
 internal interface IMsBuildLogger
 {
     /// <summary>
+    /// Logs the specified message to the MSBuild output.
+    /// </summary>
+    [StringFormatMethod("message")]
+    void LogMessage(string message, params object[] messageArgs);
+
+    /// <summary>
     /// Logs the specified warning to the MSBuild output.
     /// </summary>
     [StringFormatMethod("message")]

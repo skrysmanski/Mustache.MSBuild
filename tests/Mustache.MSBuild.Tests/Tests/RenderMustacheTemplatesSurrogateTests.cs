@@ -52,6 +52,7 @@ public sealed class RenderMustacheTemplatesSurrogateTests
         // Verify
         logger.Exceptions.ShouldBeEmpty();
         logger.Warnings.ShouldBeEmpty();
+        logger.Messages.ShouldBe(new[] { $"The file '{outputFile}' has been updated from template '{templateFile}'." });
 
         fileSystem.File.Exists(outputFile);
         fileSystem.File.ReadAllText(outputFile).ShouldBe("<c>42</c>");
@@ -103,9 +104,13 @@ public sealed class RenderMustacheTemplatesSurrogateTests
         if (targetIsUpToDate)
         {
             fileSystem.File.GetLastWriteTimeUtc(outputFile).ShouldBe(originalLastWriteTime);
+
+            logger.Messages.ShouldBe(new[] { $"The template target file '{outputFile}' is already up-to-date." });
         }
         else
         {
+            logger.Messages.ShouldBe(new[] { $"The file '{outputFile}' has been updated from template '{templateFile}'." });
+
             // TODO: This requires this to be fixed: https://github.com/TestableIO/System.IO.Abstractions/issues/872
             //fileSystem.File.GetLastWriteTimeUtc(outputFile).ShouldBeGreaterThan(originalLastWriteTime);
             fileSystem.File.GetLastWriteTimeUtc(outputFile).ShouldNotBe(originalLastWriteTime);
@@ -238,9 +243,17 @@ public sealed class RenderMustacheTemplatesSurrogateTests
 
     private sealed class MsBuildTestLogger : IMsBuildLogger
     {
+        public List<string> Messages { get; } = new();
+
         public List<string> Warnings { get; } = new();
 
         public List<Exception> Exceptions { get; } = new();
+
+        /// <inheritdoc />
+        public void LogMessage(string message, params object[] messageArgs)
+        {
+            this.Messages.Add(string.Format(message, messageArgs));
+        }
 
         /// <inheritdoc />
         public void LogWarning(string message, params object[] messageArgs)

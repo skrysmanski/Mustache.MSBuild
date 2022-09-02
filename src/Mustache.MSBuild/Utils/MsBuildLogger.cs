@@ -3,6 +3,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
+using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 namespace Mustache.MSBuild.Utils;
@@ -15,6 +16,12 @@ internal sealed class MsBuildLogger : IMsBuildLogger
     public MsBuildLogger(TaskLoggingHelper loggingHelper)
     {
         this._loggingHelper = loggingHelper;
+    }
+
+    /// <inheritdoc />
+    public void LogMessage(string message, params object[] messageArgs)
+    {
+        this._loggingHelper.LogMessage(MessageImportance.Normal, message, messageArgs);
     }
 
     /// <inheritdoc />

@@ -75,7 +75,11 @@ internal sealed class TemplatesFileService
         return streamReader.CurrentEncoding;
     }
 
-    public void WriteRenderedTemplate(TemplatePathDescriptor templatePathDescriptor, string renderedTemplate, Encoding encoding, bool onlyWriteFileIfContentsHaveChanged = true)
+    /// <summary>
+    /// Writes the rendered template to the template's output file.
+    /// </summary>
+    /// <returns>Returns <c>true</c> if the file was changed on disk or <c>false</c> if it was already up-to-date.</returns>
+    public bool WriteRenderedTemplate(TemplatePathDescriptor templatePathDescriptor, string renderedTemplate, Encoding encoding, bool onlyWriteFileIfContentsHaveChanged = true)
     {
         if (onlyWriteFileIfContentsHaveChanged && this._fileSystem.File.Exists(templatePathDescriptor.PathToOutputFile))
         {
@@ -87,11 +91,12 @@ internal sealed class TemplatesFileService
                 // NOTE: This check primarily exists for MSBuild. If the file isn't changed,
                 //   no build is necessary. So let's make sure we only write the file if it's
                 //   actually necessary.
-                return;
+                return false;
             }
         }
 
         this._fileSystem.File.WriteAllText(templatePathDescriptor.PathToOutputFile, renderedTemplate, encoding);
+        return true;
     }
 
     [DataContract]
