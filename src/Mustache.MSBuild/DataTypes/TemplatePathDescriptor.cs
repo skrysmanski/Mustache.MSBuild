@@ -12,10 +12,19 @@ namespace Mustache.MSBuild.DataTypes;
 /// </summary>
 internal sealed class TemplatePathDescriptor
 {
+    /// <summary>
+    /// The absolute path to the mustache file for this template.
+    /// </summary>
     public string PathToMustacheFile { get; }
 
+    /// <summary>
+    /// The absolute path to the output file of this template.
+    /// </summary>
     public string PathToOutputFile { get; }
 
+    /// <summary>
+    /// The absolute path to the data (.json) file of this template.
+    /// </summary>
     public string PathToDataFile { get; }
 
     private TemplatePathDescriptor(string pathToMustacheFile, string pathToOutputFile, string pathToDataFile)
@@ -32,6 +41,8 @@ internal sealed class TemplatePathDescriptor
     [MustUseReturnValue]
     public static TemplatePathDescriptor ForTemplateFile(string pathToMustacheFile, IFileSystem fileSystem)
     {
+        pathToMustacheFile = fileSystem.Path.GetFullPath(pathToMustacheFile);
+
         // NOTE: GetFileNameWithoutExtension() only removes the last(!) extension. So for "template.cs.mustache" we get "template.cs".
         var outputFileName = fileSystem.Path.GetFileNameWithoutExtension(pathToMustacheFile);
         var pathToOutputFile = fileSystem.Path.Combine(fileSystem.Path.GetDirectoryName(pathToMustacheFile)!, outputFileName);

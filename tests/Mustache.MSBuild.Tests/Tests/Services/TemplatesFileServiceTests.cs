@@ -154,13 +154,13 @@ public sealed class TemplatesFileServiceTests
         const string DATA_FILE_CONTENTS = "{ \"MyProperty\": 42 }";
         const string OUTPUT_CONTENT = "Some rendered content";
 
-        fileSystem.AddFile("/templates/MyFile.txt.mustache", new MockFileData(TEMPLATE_CONTENTS, Encoding.UTF8));
-        fileSystem.AddFile("/templates/MyFile.txt.json", new MockFileData(DATA_FILE_CONTENTS, Encoding.UTF8));
+        fileSystem.AddFile(MockUnixSupport.Path(@"C:\templates\MyFile.txt.mustache"), new MockFileData(TEMPLATE_CONTENTS, Encoding.UTF8));
+        fileSystem.AddFile(MockUnixSupport.Path(@"C:\templates\MyFile.txt.json"), new MockFileData(DATA_FILE_CONTENTS, Encoding.UTF8));
 
         var pathDescriptor = TemplatePathDescriptor.ForTemplateFile("/templates/MyFile.txt.mustache", fileSystem);
 
         // Verify assumption
-        pathDescriptor.PathToOutputFile.ShouldBe(MockUnixSupport.Path(@"\templates\MyFile.txt"));
+        pathDescriptor.PathToOutputFile.ShouldBe(MockUnixSupport.Path(@"C:\templates\MyFile.txt"));
         fileSystem.File.Exists(pathDescriptor.PathToOutputFile).ShouldBe(false);
 
         var templatesFileService = new TemplatesFileService(fileSystem);
@@ -194,20 +194,20 @@ public sealed class TemplatesFileServiceTests
 
         var originalLastWriteTime = new DateTimeOffset(2000, 1, 1, 12, 0, 30, TimeSpan.Zero);
 
-        fileSystem.AddFile("/templates/MyFile.txt.mustache", new MockFileData(TEMPLATE_CONTENTS, Encoding.UTF8));
-        fileSystem.AddFile("/templates/MyFile.txt.json", new MockFileData(DATA_FILE_CONTENTS, Encoding.UTF8));
+        fileSystem.AddFile(MockUnixSupport.Path(@"C:\templates\MyFile.txt.mustache"), new MockFileData(TEMPLATE_CONTENTS, Encoding.UTF8));
+        fileSystem.AddFile(MockUnixSupport.Path(@"C:\templates\MyFile.txt.json"), new MockFileData(DATA_FILE_CONTENTS, Encoding.UTF8));
         fileSystem.AddFile(
-            "/templates/MyFile.txt",
+            MockUnixSupport.Path(@"C:\templates\MyFile.txt"),
             new MockFileData(sameContent ? OUTPUT_CONTENT : OUTPUT_CONTENT + "XXX")
             {
                 LastWriteTime = originalLastWriteTime,
             }
         );
 
-        var pathDescriptor = TemplatePathDescriptor.ForTemplateFile("/templates/MyFile.txt.mustache", fileSystem);
+        var pathDescriptor = TemplatePathDescriptor.ForTemplateFile(MockUnixSupport.Path(@"C:\templates\MyFile.txt.mustache"), fileSystem);
 
         // Verify assumption
-        pathDescriptor.PathToOutputFile.ShouldBe(MockUnixSupport.Path(@"\templates\MyFile.txt"));
+        pathDescriptor.PathToOutputFile.ShouldBe(MockUnixSupport.Path(@"C:\templates\MyFile.txt"));
 
         var templatesFileService = new TemplatesFileService(fileSystem);
 

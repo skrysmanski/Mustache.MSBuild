@@ -75,10 +75,13 @@ public sealed class RenderMustacheTemplatesSurrogateTests
         // Setup
         var fileSystem = new MockFileSystem();
 
+        var templateFile1 = MockUnixSupport.Path(@"c:\templates\MyFile.txt.mustache");
+        var templateFile2 = MockUnixSupport.Path(@"c:\templates\SomeClass.cs.mustache");
+
         var templatePaths = new[]
         {
-            CreateMsBuildTaskItem("/templates/MyFile.txt.mustache"),
-            CreateMsBuildTaskItem("/templates/SomeClass.cs.mustache"),
+            CreateMsBuildTaskItem(templateFile1),
+            CreateMsBuildTaskItem(templateFile2),
         };
 
         var logger = new MsBuildTestLogger();
@@ -92,8 +95,8 @@ public sealed class RenderMustacheTemplatesSurrogateTests
         logger.Exceptions.ShouldBeEmpty();
         logger.Warnings.ShouldBe(new[]
         {
-            "The template file '/templates/MyFile.txt.mustache' doesn't exist. Ignoring it.",
-            "The template file '/templates/SomeClass.cs.mustache' doesn't exist. Ignoring it.",
+            $"The template file '{templateFile1}' doesn't exist. Ignoring it.",
+            $"The template file '{templateFile2}' doesn't exist. Ignoring it.",
         });
     }
 
@@ -105,13 +108,16 @@ public sealed class RenderMustacheTemplatesSurrogateTests
 
         const string TEMPLATE_CONTENTS = "<c>{{MyProperty}}</c>";
 
-        fileSystem.AddFile("/templates/MyFile.txt.mustache", new MockFileData(TEMPLATE_CONTENTS));
-        fileSystem.AddFile("/templates/SomeClass.cs.mustache", new MockFileData(TEMPLATE_CONTENTS));
+        var templateFile1 = MockUnixSupport.Path(@"c:\templates\MyFile.txt.mustache");
+        var templateFile2 = MockUnixSupport.Path(@"c:\templates\SomeClass.cs.mustache");
+
+        fileSystem.AddFile(templateFile1, new MockFileData(TEMPLATE_CONTENTS));
+        fileSystem.AddFile(templateFile2, new MockFileData(TEMPLATE_CONTENTS));
 
         var templatePaths = new[]
         {
-            CreateMsBuildTaskItem("/templates/MyFile.txt.mustache"),
-            CreateMsBuildTaskItem("/templates/SomeClass.cs.mustache"),
+            CreateMsBuildTaskItem(templateFile1),
+            CreateMsBuildTaskItem(templateFile2),
         };
 
         var logger = new MsBuildTestLogger();
@@ -125,8 +131,8 @@ public sealed class RenderMustacheTemplatesSurrogateTests
         logger.Exceptions.ShouldBeEmpty();
         logger.Warnings.ShouldBe(new[]
         {
-            "The data file 'MyFile.txt.json' is missing for template file '/templates/MyFile.txt.mustache'. Ignoring it.",
-            "The data file 'SomeClass.cs.json' is missing for template file '/templates/SomeClass.cs.mustache'. Ignoring it.",
+            $"The data file 'MyFile.txt.json' is missing for template file '{templateFile1}'. Ignoring it.",
+            $"The data file 'SomeClass.cs.json' is missing for template file '{templateFile2}'. Ignoring it.",
         });
     }
 
