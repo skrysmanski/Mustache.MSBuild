@@ -30,12 +30,16 @@ public sealed class RenderMustacheTemplatesSurrogateTests
         const string TEMPLATE_CONTENTS = "<c>{{MyProperty}}</c>";
         const string DATA_FILE_CONTENTS = "{ \"MyProperty\": 42 }";
 
-        fileSystem.AddFile("/templates/MyFile.txt.mustache", new MockFileData(TEMPLATE_CONTENTS));
-        fileSystem.AddFile("/templates/MyFile.txt.json", new MockFileData(DATA_FILE_CONTENTS));
+        var templateFile = MockUnixSupport.Path(@"C:\templates\MyFile.txt.mustache");
+        var dataFile = MockUnixSupport.Path(@"C:\templates\MyFile.txt.json");
+        var outputFile = MockUnixSupport.Path(@"C:\templates\MyFile.txt");
+
+        fileSystem.AddFile(templateFile, new MockFileData(TEMPLATE_CONTENTS));
+        fileSystem.AddFile(dataFile, new MockFileData(DATA_FILE_CONTENTS));
 
         var templatePaths = new[]
         {
-            CreateMsBuildTaskItem("/templates/MyFile.txt.mustache"),
+            CreateMsBuildTaskItem(templateFile),
         };
 
         var logger = new MsBuildTestLogger();
@@ -48,6 +52,9 @@ public sealed class RenderMustacheTemplatesSurrogateTests
         // Verify
         logger.Exceptions.ShouldBeEmpty();
         logger.Warnings.ShouldBeEmpty();
+
+        fileSystem.File.Exists(outputFile);
+        fileSystem.File.ReadAllText(outputFile).ShouldBe("<c>42</c>");
     }
 
     [Fact]
