@@ -35,7 +35,7 @@ public sealed class RenderMustacheTemplatesSurrogateTests
 
         var templatePaths = new[]
         {
-            CreateTaskItem("/templates/MyFile.txt.mustache"),
+            CreateMsBuildTaskItem("/templates/MyFile.txt.mustache"),
         };
 
         var logger = new MsBuildTestLogger();
@@ -77,8 +77,8 @@ public sealed class RenderMustacheTemplatesSurrogateTests
 
         var templatePaths = new[]
         {
-            CreateTaskItem("/templates/MyFile.txt.mustache"),
-            CreateTaskItem("/templates/SomeClass.cs.mustache"),
+            CreateMsBuildTaskItem("/templates/MyFile.txt.mustache"),
+            CreateMsBuildTaskItem("/templates/SomeClass.cs.mustache"),
         };
 
         var logger = new MsBuildTestLogger();
@@ -110,8 +110,8 @@ public sealed class RenderMustacheTemplatesSurrogateTests
 
         var templatePaths = new[]
         {
-            CreateTaskItem("/templates/MyFile.txt.mustache"),
-            CreateTaskItem("/templates/SomeClass.cs.mustache"),
+            CreateMsBuildTaskItem("/templates/MyFile.txt.mustache"),
+            CreateMsBuildTaskItem("/templates/SomeClass.cs.mustache"),
         };
 
         var logger = new MsBuildTestLogger();
@@ -140,7 +140,7 @@ public sealed class RenderMustacheTemplatesSurrogateTests
 
         var templatePaths = new[]
         {
-            CreateTaskItem("/templates/MyFile.txt.mustache"),
+            CreateMsBuildTaskItem("/templates/MyFile.txt.mustache"),
         };
 
         var logger = new MsBuildTestLogger();
@@ -157,7 +157,7 @@ public sealed class RenderMustacheTemplatesSurrogateTests
     }
 
     [MustUseReturnValue]
-    private static ITaskItem CreateTaskItem(string path)
+    private static ITaskItem CreateMsBuildTaskItem(string path)
     {
         var templateFileMock = new Mock<ITaskItem>(MockBehavior.Strict);
 
