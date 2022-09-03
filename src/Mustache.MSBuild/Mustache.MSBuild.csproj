@@ -12,7 +12,7 @@
     <LangVersion>latest</LangVersion>
 
     <!-- See also: https://docs.microsoft.com/en-us/nuget/create-packages/prerelease-packages -->
-    <Version>0.2.0-preview-1</Version>
+    <Version>0.2.0-preview-2</Version>
 
     <!-- Required even in Debug builds so that the end-to-end tests can run (which require the package). -->
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
