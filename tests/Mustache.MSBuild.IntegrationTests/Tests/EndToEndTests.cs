@@ -145,11 +145,27 @@ public sealed class EndToEndTests
         var startInfo = new ChildProcessStartInfo(processFileName, arguments ?? new())
         {
             WorkingDirectory = workingDirectory ?? this._projectDir,
-            ProcessTimeout = TestEnvInfo.RunsInCiPipeline ? TimeSpan.FromMinutes(4) : TimeSpan.FromMinutes(1),
+            ProcessTimeout = TestEnvInfo.RunsInCiPipeline ? TimeSpan.FromMinutes(10) : TimeSpan.FromMinutes(1),
             SuccessExitCode = ignoreExitCode ? null : 0,
         };
 
-        return ChildProcess.Exec(startInfo);
+        try
+        {
+            return ChildProcess.Exec(startInfo);
+        }
+        catch (Exception)
+        {
+            if (arguments?.Count > 0)
+            {
+                this._testOutputHelper.WriteLine($"Failed command: {processFileName} {string.Join(" ", arguments)}");
+            }
+            else
+            {
+                this._testOutputHelper.WriteLine($"Failed command: {processFileName}");
+            }
+
+            throw;
+        }
     }
 
     [MustUseReturnValue]
