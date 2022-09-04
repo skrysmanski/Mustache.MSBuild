@@ -52,7 +52,11 @@ public sealed class RenderMustacheTemplatesSurrogateTests
         // Verify
         logger.Exceptions.ShouldBeEmpty();
         logger.Warnings.ShouldBeEmpty();
-        logger.Messages.ShouldBe(new[] { $"The file '{outputFile}' has been updated from template '{templateFile}'." });
+        logger.Messages.ShouldBe(new[]
+        {
+            $"Mustache.MSBuild v{VersionProvider.ASSEMBLY_VERSION_STRING}",
+            $"The file '{outputFile}' has been updated from template '{templateFile}'.",
+        });
 
         fileSystem.File.Exists(outputFile);
         fileSystem.File.ReadAllText(outputFile).ShouldBe("<c>42</c>");
@@ -105,11 +109,19 @@ public sealed class RenderMustacheTemplatesSurrogateTests
         {
             fileSystem.File.GetLastWriteTimeUtc(outputFile).ShouldBe(originalLastWriteTime);
 
-            logger.Messages.ShouldBe(new[] { $"The template target file '{outputFile}' is already up-to-date." });
+            logger.Messages.ShouldBe(new[]
+            {
+                $"Mustache.MSBuild v{VersionProvider.ASSEMBLY_VERSION_STRING}",
+                $"The template target file '{outputFile}' is already up-to-date.",
+            });
         }
         else
         {
-            logger.Messages.ShouldBe(new[] { $"The file '{outputFile}' has been updated from template '{templateFile}'." });
+            logger.Messages.ShouldBe(new[]
+            {
+                $"Mustache.MSBuild v{VersionProvider.ASSEMBLY_VERSION_STRING}",
+                $"The file '{outputFile}' has been updated from template '{templateFile}'.",
+            });
 
             // TODO: This requires this to be fixed: https://github.com/TestableIO/System.IO.Abstractions/issues/872
             //fileSystem.File.GetLastWriteTimeUtc(outputFile).ShouldBeGreaterThan(originalLastWriteTime);
