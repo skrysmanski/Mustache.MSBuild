@@ -155,15 +155,7 @@ public sealed class EndToEndTests
         }
         catch (Exception)
         {
-            if (arguments?.Count > 0)
-            {
-                this._testOutputHelper.WriteLine($"Failed command: {processFileName} {string.Join(" ", arguments)}");
-            }
-            else
-            {
-                this._testOutputHelper.WriteLine($"Failed command: {processFileName}");
-            }
-
+            this._testOutputHelper.WriteLine($"Failed command: {processFileName} {arguments}");
             throw;
         }
     }
