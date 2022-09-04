@@ -2,6 +2,8 @@
 
 `Mustache.MSBuild` allows you to render [Mustache templates](https://mustache.github.io/) when a .NET project is built.
 
+Its goal is to be a simpler, cross-platform alternative to [T4 Text Templates](https://docs.microsoft.com/en-us/visualstudio/modeling/code-generation-and-t4-text-templates).
+
 For a general tutorial on Mustache templates, see: <https://www.tsmean.com/articles/mustache/the-ultimate-mustache-tutorial/>
 
 ## How To Use
