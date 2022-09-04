@@ -160,8 +160,8 @@ public sealed class TemplatesFileServiceTests
         var pathDescriptor = TemplatePathDescriptor.ForTemplateFile("/templates/MyFile.txt.mustache", fileSystem);
 
         // Verify assumption
-        pathDescriptor.PathToOutputFile.ShouldBe(MockUnixSupport.Path(@"C:\templates\MyFile.txt"));
-        fileSystem.File.Exists(pathDescriptor.PathToOutputFile).ShouldBe(false);
+        pathDescriptor.PathToOutputFile.FullPath.ShouldBe(MockUnixSupport.Path(@"C:\templates\MyFile.txt"));
+        fileSystem.File.Exists(pathDescriptor.PathToOutputFile.FullPath).ShouldBe(false);
 
         var templatesFileService = new TemplatesFileService(fileSystem);
 
@@ -174,8 +174,8 @@ public sealed class TemplatesFileServiceTests
         );
 
         // Verify
-        fileSystem.File.Exists(pathDescriptor.PathToOutputFile).ShouldBe(true);
-        fileSystem.File.ReadAllText(pathDescriptor.PathToOutputFile, Encoding.UTF8).ShouldBe(OUTPUT_CONTENT);
+        fileSystem.File.Exists(pathDescriptor.PathToOutputFile.FullPath).ShouldBe(true);
+        fileSystem.File.ReadAllText(pathDescriptor.PathToOutputFile.FullPath, Encoding.UTF8).ShouldBe(OUTPUT_CONTENT);
     }
 
     [Theory]
@@ -207,7 +207,7 @@ public sealed class TemplatesFileServiceTests
         var pathDescriptor = TemplatePathDescriptor.ForTemplateFile(MockUnixSupport.Path(@"C:\templates\MyFile.txt.mustache"), fileSystem);
 
         // Verify assumption
-        pathDescriptor.PathToOutputFile.ShouldBe(MockUnixSupport.Path(@"C:\templates\MyFile.txt"));
+        pathDescriptor.PathToOutputFile.FullPath.ShouldBe(MockUnixSupport.Path(@"C:\templates\MyFile.txt"));
 
         var templatesFileService = new TemplatesFileService(fileSystem);
 
@@ -220,16 +220,16 @@ public sealed class TemplatesFileServiceTests
         );
 
         // Verify
-        fileSystem.File.Exists(pathDescriptor.PathToOutputFile).ShouldBe(true);
-        fileSystem.File.ReadAllText(pathDescriptor.PathToOutputFile, Encoding.UTF8).ShouldBe(OUTPUT_CONTENT);
+        fileSystem.File.Exists(pathDescriptor.PathToOutputFile.FullPath).ShouldBe(true);
+        fileSystem.File.ReadAllText(pathDescriptor.PathToOutputFile.FullPath, Encoding.UTF8).ShouldBe(OUTPUT_CONTENT);
 
         if (onlyWriteFileIfContentsHaveChanged && sameContent)
         {
-            new DateTimeOffset(fileSystem.File.GetLastWriteTimeUtc(pathDescriptor.PathToOutputFile)).ShouldBe(originalLastWriteTime);
+            new DateTimeOffset(fileSystem.File.GetLastWriteTimeUtc(pathDescriptor.PathToOutputFile.FullPath)).ShouldBe(originalLastWriteTime);
         }
         else
         {
-            fileSystem.File.GetLastWriteTimeUtc(pathDescriptor.PathToOutputFile).ShouldBeLessThanOrEqualTo(DateTime.UtcNow);
+            fileSystem.File.GetLastWriteTimeUtc(pathDescriptor.PathToOutputFile.FullPath).ShouldBeLessThanOrEqualTo(DateTime.UtcNow);
         }
     }
 

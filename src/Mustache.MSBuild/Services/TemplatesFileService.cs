@@ -28,18 +28,18 @@ internal sealed class TemplatesFileService
     [MustUseReturnValue]
     public TemplateDescriptor LoadTemplate(TemplatePathDescriptor templatePathDescriptor)
     {
-        var templateDataFileContents = this._fileSystem.File.ReadAllText(templatePathDescriptor.PathToDataFile, UTF8_ENCODING_WITHOUT_BOM);
+        var templateDataFileContents = this._fileSystem.File.ReadAllText(templatePathDescriptor.PathToDataFile.FullPath, UTF8_ENCODING_WITHOUT_BOM);
 
-        var templateFileEncoding = DetermineFileEncoding(templatePathDescriptor.PathToMustacheFile, templateDataFileContents);
+        var templateFileEncoding = DetermineFileEncoding(templatePathDescriptor.PathToMustacheFile.FullPath, templateDataFileContents);
 
-        var template = this._fileSystem.File.ReadAllText(templatePathDescriptor.PathToMustacheFile, templateFileEncoding);
+        var template = this._fileSystem.File.ReadAllText(templatePathDescriptor.PathToMustacheFile.FullPath, templateFileEncoding);
 
         return new TemplateDescriptor(
             mustacheTemplate: template,
             templateDataJson: templateDataFileContents,
-            mustacheTemplateFileName: this._fileSystem.Path.GetFileName(templatePathDescriptor.PathToMustacheFile),
+            mustacheTemplateFileName: this._fileSystem.Path.GetFileName(templatePathDescriptor.PathToMustacheFile.FullPath),
             templateFileEncoding: templateFileEncoding,
-            dataFileName: this._fileSystem.Path.GetFileName(templatePathDescriptor.PathToDataFile)
+            dataFileName: this._fileSystem.Path.GetFileName(templatePathDescriptor.PathToDataFile.FullPath)
         );
     }
 
@@ -81,9 +81,9 @@ internal sealed class TemplatesFileService
     /// <returns>Returns <c>true</c> if the file was changed on disk or <c>false</c> if it was already up-to-date.</returns>
     public bool WriteRenderedTemplate(TemplatePathDescriptor templatePathDescriptor, string renderedTemplate, Encoding encoding, bool onlyWriteFileIfContentsHaveChanged = true)
     {
-        if (onlyWriteFileIfContentsHaveChanged && this._fileSystem.File.Exists(templatePathDescriptor.PathToOutputFile))
+        if (onlyWriteFileIfContentsHaveChanged && this._fileSystem.File.Exists(templatePathDescriptor.PathToOutputFile.FullPath))
         {
-            var currentOutputFileContents = this._fileSystem.File.ReadAllText(templatePathDescriptor.PathToOutputFile, encoding);
+            var currentOutputFileContents = this._fileSystem.File.ReadAllText(templatePathDescriptor.PathToOutputFile.FullPath, encoding);
 
             if (renderedTemplate == currentOutputFileContents)
             {
@@ -95,7 +95,7 @@ internal sealed class TemplatesFileService
             }
         }
 
-        this._fileSystem.File.WriteAllText(templatePathDescriptor.PathToOutputFile, renderedTemplate, encoding);
+        this._fileSystem.File.WriteAllText(templatePathDescriptor.PathToOutputFile.FullPath, renderedTemplate, encoding);
         return true;
     }
 

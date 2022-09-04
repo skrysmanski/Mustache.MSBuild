@@ -55,7 +55,7 @@ public sealed class RenderMustacheTemplatesSurrogateTests
         logger.Messages.ShouldBe(new[]
         {
             $"Mustache.MSBuild v{VersionProvider.ASSEMBLY_VERSION_STRING}",
-            $"The file '{outputFile}' has been updated from template '{templateFile}'.",
+            $"Template target file '{outputFile}': updated from template '{templateFile}'",
         });
 
         fileSystem.File.Exists(outputFile);
@@ -112,7 +112,7 @@ public sealed class RenderMustacheTemplatesSurrogateTests
             logger.Messages.ShouldBe(new[]
             {
                 $"Mustache.MSBuild v{VersionProvider.ASSEMBLY_VERSION_STRING}",
-                $"The template target file '{outputFile}' is already up-to-date.",
+                $"Template target file '{outputFile}': already up-to-date",
             });
         }
         else
@@ -120,7 +120,7 @@ public sealed class RenderMustacheTemplatesSurrogateTests
             logger.Messages.ShouldBe(new[]
             {
                 $"Mustache.MSBuild v{VersionProvider.ASSEMBLY_VERSION_STRING}",
-                $"The file '{outputFile}' has been updated from template '{templateFile}'.",
+                $"Template target file '{outputFile}': updated from template '{templateFile}'",
             });
 
             // TODO: This requires this to be fixed: https://github.com/TestableIO/System.IO.Abstractions/issues/872

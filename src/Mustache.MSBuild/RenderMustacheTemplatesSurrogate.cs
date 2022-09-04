@@ -43,18 +43,18 @@ internal sealed class RenderMustacheTemplatesSurrogate
             {
                 var templatePathDescriptor = TemplatePathDescriptor.ForTemplateFile(pathToMustacheFile: templatePath.ItemSpec, this._fileSystem);
 
-                if (!this._fileSystem.File.Exists(templatePathDescriptor.PathToMustacheFile))
+                if (!this._fileSystem.File.Exists(templatePathDescriptor.PathToMustacheFile.FullPath))
                 {
-                    logger.LogWarning("The template file '{0}' doesn't exist. Ignoring it.", templatePathDescriptor.PathToMustacheFile);
+                    logger.LogWarning("The template file '{0}' doesn't exist. Ignoring it.", templatePathDescriptor.PathToMustacheFile.ShortPart);
                     continue;
                 }
 
-                if (!this._fileSystem.File.Exists(templatePathDescriptor.PathToDataFile))
+                if (!this._fileSystem.File.Exists(templatePathDescriptor.PathToDataFile.FullPath))
                 {
                     logger.LogWarning(
                         "The data file '{0}' is missing for template file '{1}'. Ignoring it.",
-                        Path.GetFileName(templatePathDescriptor.PathToDataFile),
-                        templatePathDescriptor.PathToMustacheFile
+                        Path.GetFileName(templatePathDescriptor.PathToDataFile.FullPath),
+                        templatePathDescriptor.PathToMustacheFile.ShortPart
                     );
                     continue;
                 }
@@ -72,11 +72,15 @@ internal sealed class RenderMustacheTemplatesSurrogate
 
                 if (fileWasChanged)
                 {
-                    logger.LogMessage("The file '{0}' has been updated from template '{1}'.", templatePathDescriptor.PathToOutputFile, templatePathDescriptor.PathToMustacheFile);
+                    logger.LogMessage(
+                        "Template target file '{0}': updated from template '{1}'",
+                        templatePathDescriptor.PathToOutputFile.ShortPart,
+                        templatePathDescriptor.PathToMustacheFile.ShortPart
+                    );
                 }
                 else
                 {
-                    logger.LogMessage("The template target file '{0}' is already up-to-date.", templatePathDescriptor.PathToOutputFile);
+                    logger.LogMessage("Template target file '{0}': already up-to-date", templatePathDescriptor.PathToOutputFile.ShortPart);
                 }
             }
             catch (Exception ex)
