@@ -107,7 +107,7 @@ In the .NET space there are two other (popular) ways to generate files: [T4 Text
 | Generate from | Template | Template | Source Code (separate project)
 | Can generate | Any text file | Any text file | Source Code
 | Cross platform | Yes | No, Windows only | Yes
-| Visible Output File | Yes | Yes | No
+| Visible output file | Yes | Yes | No
 | Template change requires VS restart | No | No | Yes
 | Output built | During build | On file save | During build
 
