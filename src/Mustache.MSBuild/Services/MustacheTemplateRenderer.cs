@@ -28,6 +28,10 @@ internal static class MustacheTemplateRenderer
                 {
                     settings.AddNewtonsoftJson();
                     settings.SetIgnoreCaseOnKeyLookup(true);
+                    // Disable encoding of XML characters (<>&"). If a user wants them encoded,
+                    // they must encode them themselves. (Without this, there would be not way
+                    // for the user to get them "un-encoded".)
+                    settings.SetEncodingFunction(static val => val);
                 }
             )
             .Build();
