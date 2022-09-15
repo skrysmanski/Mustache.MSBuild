@@ -1,6 +1,7 @@
 ﻿<Project>
 
   <Import Project="$(MSBuildThisFileDirectory)Mustache.MSBuild.tasks" />
+  <Import Project="$(MSBuildThisFileDirectory)..\Version.props" />
 
   <ItemGroup>
 
@@ -18,6 +19,7 @@
     Renders all templates in the "MustacheFiles" item group.
   -->
   <Target Name="RenderMustacheTemplates" Condition=" '@(MustacheFiles)' != '' " BeforeTargets="BeforeResGen">
+    <ValidateMustacheAssemblyVersion ExpectedVersion="$(MustacheMSBuildVersion)" />
     <RenderMustacheTemplates TemplatePaths="@(MustacheFiles)" />
   </Target>
 

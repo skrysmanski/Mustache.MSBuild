@@ -54,7 +54,6 @@ public sealed class RenderMustacheTemplatesSurrogateTests
         logger.Warnings.ShouldBeEmpty();
         logger.Messages.ShouldBe(new[]
         {
-            $"Mustache.MSBuild v{VersionProvider.ASSEMBLY_VERSION_STRING}",
             $"Template target file '{outputFile}': updated from template '{templateFile}'",
         });
 
@@ -111,7 +110,6 @@ public sealed class RenderMustacheTemplatesSurrogateTests
 
             logger.Messages.ShouldBe(new[]
             {
-                $"Mustache.MSBuild v{VersionProvider.ASSEMBLY_VERSION_STRING}",
                 $"Template target file '{outputFile}': already up-to-date",
             });
         }
@@ -119,7 +117,6 @@ public sealed class RenderMustacheTemplatesSurrogateTests
         {
             logger.Messages.ShouldBe(new[]
             {
-                $"Mustache.MSBuild v{VersionProvider.ASSEMBLY_VERSION_STRING}",
                 $"Template target file '{outputFile}': updated from template '{templateFile}'",
             });
 

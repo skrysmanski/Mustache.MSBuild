@@ -33,8 +33,6 @@ internal sealed class RenderMustacheTemplatesSurrogate
             return true;
         }
 
-        logger.LogMessage($"Mustache.MSBuild v{VersionProvider.ASSEMBLY_VERSION_STRING}");
-
         bool success = true;
 
         foreach (var templatePath in templatePaths)

@@ -8,5 +8,7 @@
   -->
   <UsingTask TaskName="Mustache.MSBuild.RenderMustacheTemplates"
              AssemblyFile="$(MSBuildThisFileDirectory)..\lib\netstandard2.0\Mustache.MSBuild.dll" />
+  <UsingTask TaskName="Mustache.MSBuild.ValidateMustacheAssemblyVersion"
+             AssemblyFile="$(MSBuildThisFileDirectory)..\lib\netstandard2.0\Mustache.MSBuild.dll" />
 
 </Project>
