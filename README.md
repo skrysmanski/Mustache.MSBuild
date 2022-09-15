@@ -1,10 +1,8 @@
 ﻿# Mustache Templates for MSBuild and .NET Project
 
-`Mustache.MSBuild` allows you to render [Mustache templates](https://mustache.github.io/) when a .NET project is built. 
+`Mustache.MSBuild` allows you to render [Mustache templates](https://mustache.github.io/) when a .NET project is built.
 
 Its goal is to be a simpler, cross-platform alternative to [T4 Text Templates](https://docs.microsoft.com/en-us/visualstudio/modeling/code-generation-and-t4-text-templates).
-
-It can be used both for .NET Framework and .NET (Core) projects.
 
 For a general tutorial on Mustache templates, see: <https://www.tsmean.com/articles/mustache/the-ultimate-mustache-tutorial/>
 
@@ -81,6 +79,14 @@ To keep you template, output, and data file neatly organized, you can use `<Depe
 | Name               | Description
 | ------------------ | -----------
 | `{{TemplateFile}}` | File name of the template file
+
+## Compatibility
+
+`Mustache.MSBuild` is a *MSBuild* "plugin".
+
+As such, it is compatible both with **.NET Framework** and **.NET (Core)** projects.
+
+However, it requires a **modern SDK-style project**. Legacy (non-SDK-style) projects are *not* supported. (For some details on how to tell them apart, see [Identify the project format](https://docs.microsoft.com/en-us/nuget/resources/check-project-format).)
 
 ## Input/Output Encoding
 
