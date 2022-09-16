@@ -57,6 +57,25 @@ public sealed class MustacheTemplateRendererTests
     }
 
     [Fact]
+    public void Test_RenderTemplate_CommentsInDataFile()
+    {
+        // Setup
+        var templateDescriptor = new TemplateDescriptor(
+            mustacheTemplate: "<b>{{MyTemplateValue}}</b>",
+            templateDataJson: "{ /* my comment */ \"MyTemplateValue\": 42 // another comment\n }",
+            mustacheTemplateFileName: "MyFile.cs.mustache",
+            templateFileEncoding: Encoding.UTF8,
+            dataFileName: "MyFile.cs.json"
+        );
+
+        // Test
+        var renderedTemplate = MustacheTemplateRenderer.RenderTemplate(templateDescriptor);
+
+        // Verify
+        renderedTemplate.ShouldBe("<b>42</b>");
+    }
+
+    [Fact]
     public void Test_RenderTemplate_DifferentCasing()
     {
         // Setup
