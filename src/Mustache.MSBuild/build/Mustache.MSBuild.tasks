@@ -7,8 +7,8 @@
         and reopen it again to get the new version loaded.
   -->
   <UsingTask TaskName="Mustache.MSBuild.RenderMustacheTemplates"
-             AssemblyFile="$(MSBuildThisFileDirectory)..\lib\netstandard2.0\Mustache.MSBuild.dll" />
+             AssemblyFile="$(MSBuildThisFileDirectory)..\tools\Mustache.MSBuild.dll" />
   <UsingTask TaskName="Mustache.MSBuild.ValidateMustacheAssemblyVersion"
-             AssemblyFile="$(MSBuildThisFileDirectory)..\lib\netstandard2.0\Mustache.MSBuild.dll" />
+             AssemblyFile="$(MSBuildThisFileDirectory)..\tools\Mustache.MSBuild.dll" />
 
 </Project>

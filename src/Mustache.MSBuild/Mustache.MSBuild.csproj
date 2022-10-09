@@ -21,7 +21,20 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <!-- Not sure why, but we need to disable this or MSBuild won't be able to load this assembly. -->
     <EmbedJetbrainsAnnotations>false</EmbedJetbrainsAnnotations>
+
+    <!-- Do not put the built assembly into the NuGet package directly - to prevent the consuming project
+         from accidentially using the types in the assembly. Instead the assembly is placed in the "tools"
+         folder (see below).
+    -->
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <!-- NU5128 must be disabled because of IncludeBuildOutput=false. -->
+    <NoWarn>NU5128</NoWarn>
   </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Include the built assembly in the "tools" folder in the NuGet package. -->
+    <None Include="$(TargetPath)" Pack="true" PackagePath="tools" Visible="false" />
+  </ItemGroup>
 
   <PropertyGroup Label="NuGet package properties">
     <Description>Renders Mustache templates when compiling projects. Uses JSON as data files.</Description>
