@@ -22,6 +22,11 @@
     <!-- Not sure why, but we need to disable this or MSBuild won't be able to load this assembly. -->
     <EmbedJetbrainsAnnotations>false</EmbedJetbrainsAnnotations>
 
+    <!-- Don't list any NuGet dependencies for this package - as this is a dev dependency and
+         consuming projects must not use any of our dependencies.
+    -->
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+
     <!-- Do not put the built assembly into the NuGet package directly - to prevent the consuming project
          from accidentially using the types in the assembly. Instead the assembly is placed in the "tools"
          folder (see below).
@@ -76,32 +81,20 @@
     <None Include="..\..\README.md" Link="README.md" Pack="True" PackagePath="\" />
   </ItemGroup>
 
+  <!-- We use "Costura.Fody" to bundle all dependencies inside the resulting assembly.
+       This is required because without this, MSBuild won't be able to find dependencies of this assembly
+       (e.g. "Stubble.Core").
+  -->
   <ItemGroup>
-    <!-- We use this package to bundle all dependencies (except for MSBuild) inside the resulting assembly.
-         This is required because without this, MSBuild won't be able to find dependencies of this assembly
-         (e.g. "Stubble.Core").
-    -->
-    <PackageReference Include="AppMotor.NetStandardCompat" Version="0.1.0">
-      <!-- Since this dependency is bundled in our assembly, we don't need/want to create a NuGet dependency for it. -->
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
+    <PackageReference Include="AppMotor.NetStandardCompat" Version="0.1.0" />
     <PackageReference Include="Costura.Fody" Version="5.7.0">
       <!-- This is a dev dependency. -->
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.3.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1">
-      <!-- Since this dependency is bundled in our assembly, we don't need/want to create a NuGet dependency for it. -->
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Stubble.Core" Version="1.10.8">
-      <!-- Since this dependency is bundled in our assembly, we don't need/want to create a NuGet dependency for it. -->
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="System.IO.Abstractions" Version="17.2.3">
-      <!-- Since this dependency is bundled in our assembly, we don't need/want to create a NuGet dependency for it. -->
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Stubble.Core" Version="1.10.8" />
+    <PackageReference Include="System.IO.Abstractions" Version="17.2.3" />
   </ItemGroup>
 
 </Project>
