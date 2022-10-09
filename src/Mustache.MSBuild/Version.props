@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <!-- See also: https://docs.microsoft.com/en-us/nuget/create-packages/prerelease-packages -->
-    <MustacheMSBuildVersion>0.3.2-preview4</MustacheMSBuildVersion>
+    <MustacheMSBuildVersion>0.3.2</MustacheMSBuildVersion>
   </PropertyGroup>
 
 </Project>
