@@ -44,6 +44,8 @@
   <PropertyGroup Label="NuGet package properties">
     <Description>Renders Mustache templates when compiling projects. Uses JSON as data files.</Description>
 
+    <PackageTags>MSBuild;Mustache;Template;Templates;Templating;CodeGenerator;CodeGeneration</PackageTags>
+
     <!-- See: https://spdx.org/licenses/ -->
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
